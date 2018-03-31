@@ -1,7 +1,8 @@
 <template>
   <el-row>
-    <el-col :span="12" :offset="6" class="text-center">
-      <img src="../assets/logo.png" alt="Brokalys Logo" class="logo" />
+    <el-col>
+      <h1 class="h1">Brokalys pingeris</h1>
+      <p>Aizpildi vienkāršu formu un saņem paziņojumus e-pastā par jauniem nekustamā īpašuma sludinājumiem.</p>
 
       <el-form ref="form" :model="form" :rules="rules" label-position="left">
         <el-form-item label="E-pasta adrese" prop="email">
@@ -41,6 +42,22 @@
           </el-col>
         </el-form-item>
 
+        <el-form-item label="Lokācija" required>
+          <gmap-map :center="center" :zoom="10" style="width: 100%; height: 300px" ref="map">
+            <gmap-polygon
+              :paths="paths"
+              :editable="true"
+              @paths_changed="updateEdited($event)"
+              @rightclick="handleClickForDelete"
+              ref="polygon">
+            </gmap-polygon>
+          </gmap-map>
+        </el-form-item>
+
+        <el-form-item prop="optin">
+          <el-checkbox v-model="form.optin">Es piekrītu privātuma politikai</el-checkbox>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="submitForm()">Izveidot</el-button>
         </el-form-item>
@@ -66,11 +83,39 @@ export default {
       return callback();
     };
 
+    const requiredTrue = (rule, value, callback) => {
+      if (value !== true) {
+        return callback(new Error('Šis lauciņš ir obligāti aizpildāms.'));
+      }
+
+      return callback();
+    };
+
     return {
+      center: {
+        lat: 56.98,
+        lng: 24.105078,
+      },
+      paths: [
+        [
+          { lng: 24.1366192486729, lat: 56.9922942350075 },
+          { lng: 23.995789971634395, lat: 56.976393666616254 },
+          { lng: 24.005336060806712, lat: 56.92490408641493 },
+          { lng: 24.108466782852588, lat: 56.889287904181955 },
+          { lng: 24.291935029312526, lat: 56.93221057479092 },
+          { lng: 24.24517618684422, lat: 56.99650208638349 },
+          { lng: 24.1366192486729, lat: 56.9922942350075 },
+        ],
+      ],
+      mvcPaths: null,
+
       form: {
         email: '',
         category: 'apartment',
         type: 'sell',
+        price_min: '',
+        price_max: '',
+        optin: false,
       },
       rules: {
         email: [
@@ -92,6 +137,9 @@ export default {
           { type: 'number', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
           { validator: checkPrice, trigger: 'blur' },
         ],
+        optin: [
+          { validator: requiredTrue, trigger: 'blur' },
+        ],
       },
     };
   },
@@ -107,20 +155,23 @@ export default {
         console.log('error submit!!');
       });
     },
+
+    updateEdited(mvcPaths) {
+      this.mvcPaths = mvcPaths;
+    },
+
+    handleClickForDelete($event) {
+      if ($event.vertex) {
+        this.$refs.polygon.$polygonObject.getPaths()
+          .getAt($event.path)
+          .removeAt($event.vertex);
+      }
+    },
   },
 };
 </script>
 
 <style>
-.text-center {
-  text-align: center;
-}
-
-.logo {
-  margin-bottom: 30px;
-  max-width: 100px;
-}
-
 .el-select,
 .el-form-item__label {
   width: 100%;
