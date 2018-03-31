@@ -1,28 +1,25 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld/>
-  </div>
+  <el-container>
+    <el-main>
+      <SignupForm/>
+    </el-main>
+    <el-aside width="40%">Aside</el-aside>
+  </el-container>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import SignupForm from './components/SignupForm';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+    SignupForm,
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 </style>
