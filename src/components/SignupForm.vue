@@ -2,31 +2,39 @@
   <el-row>
     <el-col>
       <h1 class="h1">Brokalys pingeris</h1>
-      <p>Aizpildi vienkāršu formu un saņem paziņojumus e-pastā par jauniem nekustamā īpašuma sludinājumiem.</p>
+      <p>Aizpildi formu un saņem paziņojumus e-pastā par jauniem nekustamā īpašuma sludinājumiem.</p>
 
       <el-form ref="form" :model="form" :rules="rules" label-position="left">
         <el-form-item label="E-pasta adrese" prop="email">
-          <el-input
-            placeholder="demo@brokalys.com"
-            suffix-icon="el-icon-message"
-            v-model="form.email">
-          </el-input>
+          <el-col :span="11">
+            <el-input
+              placeholder="demo@brokalys.com"
+              suffix-icon="el-icon-message"
+              v-model="form.email">
+            </el-input>
+          </el-col>
         </el-form-item>
 
-        <el-form-item label="Nekustamā īpašuma tips" prop="category">
-          <el-select v-model="form.category">
-            <el-option label="Dzīvoklis" value="apartment"></el-option>
-            <el-option label="Māja" value="house"></el-option>
-            <el-option label="Zeme" value="land"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="Nekustamā īpašuma tips" prop="category">
+              <el-select v-model="form.category">
+                <el-option label="Dzīvoklis" value="apartment"></el-option>
+                <el-option label="Māja" value="house"></el-option>
+                <el-option label="Zeme" value="land"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
 
-        <el-form-item label="Darījuma veids" prop="type">
-          <el-select v-model="form.type">
-            <el-option label="Pārdod" value="sell"></el-option>
-            <el-option label="Īrē" value="rent"></el-option>
-          </el-select>
-        </el-form-item>
+          <el-col :span="11" :offset="2">
+            <el-form-item label="Darījuma veids" prop="type">
+              <el-select v-model="form.type">
+                <el-option label="Pārdod" value="sell"></el-option>
+                <el-option label="Īrē" value="rent"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-form-item label="Cena (no, līdz)" required>
           <el-col :span="11">
@@ -42,16 +50,18 @@
           </el-col>
         </el-form-item>
 
-        <el-form-item label="Lokācija" required>
-          <gmap-map :center="center" :zoom="10" style="width: 100%; height: 300px" ref="map">
-            <gmap-polygon
-              :paths="paths"
-              :editable="true"
-              @paths_changed="updateEdited($event)"
-              @rightclick="handleClickForDelete"
-              ref="polygon">
-            </gmap-polygon>
-          </gmap-map>
+        <el-form-item label="Reģions" required>
+          <el-col>
+            <gmap-map :center="center" :zoom="10" style="width: 100%; height: 300px" ref="map">
+              <gmap-polygon
+                :paths="paths"
+                :editable="true"
+                @paths_changed="updateEdited($event)"
+                @rightclick="handleClickForDelete"
+                ref="polygon">
+              </gmap-polygon>
+            </gmap-map>
+          </el-col>
         </el-form-item>
 
         <el-form-item prop="optin">
@@ -59,7 +69,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm()">Izveidot</el-button>
+          <el-button type="primary" @click="submitForm()">Saņemt nek.īp. paziņojumus</el-button>
         </el-form-item>
       </el-form>
     </el-col>

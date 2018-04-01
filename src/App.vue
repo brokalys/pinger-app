@@ -3,9 +3,6 @@
     <el-main>
       <SignupForm/>
     </el-main>
-    <el-aside width="40%">
-      <SideMenu />
-    </el-aside>
   </el-container>
 </template>
 
@@ -24,17 +21,17 @@ export default {
 
 <style>
 body {
-  margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: url(https://images.unsplash.com/photo-1522054541898-adc6abd570e5?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=9c41140ab28eb3856991eac6c9ccfaa3&auto=format&fit=crop&w=1567&q=80);
-  background-size: cover;
+  margin: 0;
+  background: #543093;
 }
 .el-container {
-  margin: 100px 200px;
+  border-radius: 5px;
+  max-width: 600px;
   background-color: #fff;
+  margin: 50px auto;
 }
-.el-aside {
-  background: #39285c;
-  color: #fff;
+.line {
+  text-align: center;
 }
 </style>
