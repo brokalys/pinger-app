@@ -173,15 +173,20 @@ export default {
           types: [this.form.type],
           price_min: this.form.price_min,
           price_max: this.form.price_max,
-        }, (response) => {
+        }).then(() => {
           this.loading = false;
           this.$message({
             message: 'Lūdzu, pārbaudi savu e-pastu. Pēc e-pasta apstiprināšanas sāksi saņemt nek.īp. paziņojumus.',
-            type: 'success'
+            type: 'success',
+            duration: 20000,
           });
-        }, (response) => {
+        }).catch((response) => {
           this.loading = false;
-          this.$message.error('Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.');
+          this.$message({
+            message: 'Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.',
+            type: 'error',
+            duration: 20000,
+          });
           bugsnagClient.metaData = { response };
           bugsnagClient.notify('Unexpected error occurred when creating a new pinger.');
         });
