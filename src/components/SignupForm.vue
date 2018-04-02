@@ -39,13 +39,17 @@
         <el-form-item label="Cena (no, līdz)" required>
           <el-col :span="11">
             <el-form-item prop="price_min">
-              <el-input v-model.number="form.price_min" auto-complete="off"></el-input>
+              <el-input v-model.number="form.price_min" auto-complete="off">
+                <template slot="append">EUR</template>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item prop="price_max">
-              <el-input v-model.number="form.price_max" auto-complete="off"></el-input>
+              <el-input v-model.number="form.price_max" auto-complete="off">
+                <template slot="append">EUR</template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-form-item>
