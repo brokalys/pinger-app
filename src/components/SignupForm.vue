@@ -4,7 +4,7 @@
       <h1 class="h1">Brokalys pingeris</h1>
       <p>Aizpildi formu un saņem paziņojumus e-pastā par jauniem nekustamā īpašuma sludinājumiem.</p>
 
-      <el-form ref="form" :model="form" :rules="rules" label-position="left">
+      <el-form ref="form" :model="form" :rules="rules" label-position="left" :disabled="loading">
         <el-form-item label="E-pasta adrese" prop="email">
           <el-col :span="11">
             <el-input
@@ -69,7 +69,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm()">Saņemt nek.īp. paziņojumus</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="loading">Saņemt nek.īp. paziņojumus</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -118,6 +118,7 @@ export default {
         ],
       ],
       mvcPaths: null,
+      loading: false,
 
       form: {
         email: '',
@@ -140,11 +141,11 @@ export default {
         ],
         price_min: [
           { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
-          { type: 'number', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
+          { type: 'integer', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
         ],
         price_max: [
           { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
-          { type: 'number', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
+          { type: 'integer', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
           { validator: checkPrice, trigger: 'blur' },
         ],
         optin: [
@@ -157,12 +158,28 @@ export default {
   methods: {
     submitForm() {
       this.$refs.form.validate((valid) => {
-        if (valid) {
-          alert('submit!');
+        if (valid === false) {
           return;
         }
 
-        console.log('error submit!!');
+        this.loading = true;
+        this.$http.post('https://api.brokalys.com/pinger', {
+          email: this.form.email,
+          categories: [this.form.category],
+          types: [this.form.type],
+          price_min: this.form.price_min,
+          price_max: this.form.price_max,
+        }, (response) => {
+          this.loading = false;
+          this.$message({
+            message: 'Lūdzu, pārbaudi savu e-pastu. Pēc e-pasta apstiprināšanas sāksi saņemt nek.īp. paziņojumus.',
+            type: 'success'
+          });
+        }, (response) => {
+          this.loading = false;
+          this.$message.error('Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.');
+          // @todo: bugsnag
+        });
       });
     },
 
