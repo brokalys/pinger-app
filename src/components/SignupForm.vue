@@ -2,7 +2,10 @@
   <el-row>
     <el-col>
       <h1 class="h1">Brokalys pingeris</h1>
-      <p>Aizpildi formu un saņem paziņojumus e-pastā par jauniem nekustamā īpašuma sludinājumiem.</p>
+      <p>
+        Aizpildi formu un saņem paziņojumus e-pastā par jauniem
+        nekustamā īpašuma sludinājumiem.
+      </p>
 
       <el-form ref="form" :model="form" :rules="rules" label-position="left" :disabled="loading">
         <el-form-item label="E-pasta adrese" prop="email">
@@ -73,7 +76,9 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm()" :loading="loading">Saņemt nek.īp. paziņojumus</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="loading">
+            Saņemt nek.īp. paziņojumus
+          </el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -187,8 +192,11 @@ export default {
             type: 'error',
             duration: 20000,
           });
-          bugsnagClient.metaData = { response };
-          bugsnagClient.notify('Unexpected error occurred when creating a new pinger.');
+
+          if (window.bugsnagClient) {
+            window.bugsnagClient.metaData = { response };
+            window.bugsnagClient.notify('Unexpected error occurred when creating a new pinger.');
+          }
         });
       });
     },
