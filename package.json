@@ -12,6 +12,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "bugsnag-vue": "^1.0.1",
     "element-ui": "^2.3.2",
     "vue": "^2.5.2",
     "vue-resource": "^1.5.0",

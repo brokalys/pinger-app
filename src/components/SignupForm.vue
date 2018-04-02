@@ -178,7 +178,8 @@ export default {
         }, (response) => {
           this.loading = false;
           this.$message.error('Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.');
-          // @todo: bugsnag
+          bugsnagClient.metaData = { response };
+          bugsnagClient.notify('Unexpected error occurred when creating a new pinger.');
         });
       });
     },
