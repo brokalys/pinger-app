@@ -17,7 +17,7 @@ Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(VueGoogleMaps, {
   load: {
-    key: '', // @todo
+    key: process.env.GMAPS_KEY,
   },
 });
 
