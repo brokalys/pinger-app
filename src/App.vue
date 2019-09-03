@@ -1,21 +1,21 @@
 <template>
   <el-container>
     <el-main>
-      <SignupForm/>
+      <SignupForm />
     </el-main>
   </el-container>
 </template>
 
 <script>
-import SignupForm from './components/SignupForm';
-import SideMenu from './components/SideMenu';
+import SignupForm from "./components/SignupForm";
+import SideMenu from "./components/SideMenu";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     SignupForm,
-    SideMenu,
-  },
+    SideMenu
+  }
 };
 </script>
 

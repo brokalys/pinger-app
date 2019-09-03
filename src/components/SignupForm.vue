@@ -3,17 +3,24 @@
     <el-col>
       <h1 class="h1">Brokalys pingeris</h1>
       <p>
-        Aizpildi formu un saņem paziņojumus e-pastā par jauniem
-        nekustamā īpašuma sludinājumiem.
+        Aizpildi formu un saņem paziņojumus e-pastā par jauniem nekustamā
+        īpašuma sludinājumiem.
       </p>
 
-      <el-form ref="form" :model="form" :rules="rules" label-position="left" :disabled="loading">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-position="left"
+        :disabled="loading"
+      >
         <el-form-item label="E-pasta adrese" prop="email">
           <el-col :span="11">
             <el-input
               placeholder="demo@brokalys.com"
               suffix-icon="el-icon-message"
-              v-model="form.email">
+              v-model="form.email"
+            >
             </el-input>
           </el-col>
         </el-form-item>
@@ -43,7 +50,9 @@
           <el-col :span="11">
             <el-form-item prop="price_min">
               <el-input v-model.number="form.price_min" auto-complete="off">
-                <template slot="append">EUR</template>
+                <template slot="append"
+                  >EUR</template
+                >
               </el-input>
             </el-form-item>
           </el-col>
@@ -51,7 +60,9 @@
           <el-col :span="11">
             <el-form-item prop="price_max">
               <el-input v-model.number="form.price_max" auto-complete="off">
-                <template slot="append">EUR</template>
+                <template slot="append"
+                  >EUR</template
+                >
               </el-input>
             </el-form-item>
           </el-col>
@@ -59,20 +70,28 @@
 
         <el-form-item label="Reģions" required>
           <el-col>
-            <gmap-map :center="center" :zoom="10" style="width: 100%; height: 300px" ref="map">
+            <gmap-map
+              :center="center"
+              :zoom="10"
+              style="width: 100%; height: 300px"
+              ref="map"
+            >
               <gmap-polygon
                 :paths="paths"
                 :editable="true"
                 @paths_changed="updateEdited($event)"
                 @rightclick="handleClickForDelete"
-                ref="polygon">
+                ref="polygon"
+              >
               </gmap-polygon>
             </gmap-map>
           </el-col>
         </el-form-item>
 
         <el-form-item prop="optin">
-          <el-checkbox v-model="form.optin">Es piekrītu privātuma politikai</el-checkbox>
+          <el-checkbox v-model="form.optin"
+            >Es piekrītu privātuma politikai</el-checkbox
+          >
         </el-form-item>
 
         <el-form-item>
@@ -87,16 +106,18 @@
 
 <script>
 export default {
-  name: 'SignupForm',
+  name: "SignupForm",
 
   data() {
     const checkPrice = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('Šis lauciņš ir obligāti aizpildāms.'));
+        return callback(new Error("Šis lauciņš ir obligāti aizpildāms."));
       }
 
       if (this.form.price_min >= value) {
-        return callback(new Error('Cenai /līdz/ ir jābūt mazākai par cenu /no/.'));
+        return callback(
+          new Error("Cenai /līdz/ ir jābūt mazākai par cenu /no/.")
+        );
       }
 
       return callback();
@@ -104,7 +125,7 @@ export default {
 
     const requiredTrue = (rule, value, callback) => {
       if (value !== true) {
-        return callback(new Error('Šis lauciņš ir obligāti aizpildāms.'));
+        return callback(new Error("Šis lauciņš ir obligāti aizpildāms."));
       }
 
       return callback();
@@ -113,7 +134,7 @@ export default {
     return {
       center: {
         lat: 56.98,
-        lng: 24.105078,
+        lng: 24.105078
       },
       paths: [
         [
@@ -123,81 +144,118 @@ export default {
           { lng: 24.108466782852588, lat: 56.889287904181955 },
           { lng: 24.291935029312526, lat: 56.93221057479092 },
           { lng: 24.24517618684422, lat: 56.99650208638349 },
-          { lng: 24.1366192486729, lat: 56.9922942350075 },
-        ],
+          { lng: 24.1366192486729, lat: 56.9922942350075 }
+        ]
       ],
       mvcPaths: null,
       loading: false,
 
       form: {
-        email: '',
-        category: 'apartment',
-        type: 'sell',
-        price_min: '',
-        price_max: '',
-        optin: false,
+        email: "",
+        category: "apartment",
+        type: "sell",
+        price_min: "",
+        price_max: "",
+        optin: false
       },
       rules: {
         email: [
-          { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
-          { type: 'email', message: 'Pārbaudi e-pasta adresi.', trigger: 'blur' },
+          {
+            required: true,
+            message: "Šis lauciņš ir obligāti aizpildāms.",
+            trigger: "blur"
+          },
+          {
+            type: "email",
+            message: "Pārbaudi e-pasta adresi.",
+            trigger: "blur"
+          }
         ],
         category: [
-          { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
+          {
+            required: true,
+            message: "Šis lauciņš ir obligāti aizpildāms.",
+            trigger: "blur"
+          }
         ],
         type: [
-          { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
+          {
+            required: true,
+            message: "Šis lauciņš ir obligāti aizpildāms.",
+            trigger: "blur"
+          }
         ],
         price_min: [
-          { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
-          { type: 'integer', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
+          {
+            required: true,
+            message: "Šis lauciņš ir obligāti aizpildāms.",
+            trigger: "blur"
+          },
+          {
+            type: "integer",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            trigger: "blur"
+          }
         ],
         price_max: [
-          { required: true, message: 'Šis lauciņš ir obligāti aizpildāms.', trigger: 'blur' },
-          { type: 'integer', message: 'Šajā lauciņā var ievadīt tikai skaitļus.', trigger: 'blur' },
-          { validator: checkPrice, trigger: 'blur' },
+          {
+            required: true,
+            message: "Šis lauciņš ir obligāti aizpildāms.",
+            trigger: "blur"
+          },
+          {
+            type: "integer",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            trigger: "blur"
+          },
+          { validator: checkPrice, trigger: "blur" }
         ],
-        optin: [
-          { validator: requiredTrue, trigger: 'blur' },
-        ],
-      },
+        optin: [{ validator: requiredTrue, trigger: "blur" }]
+      }
     };
   },
 
   methods: {
     submitForm() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.form.validate(valid => {
         if (valid === false) {
           return;
         }
 
         this.loading = true;
-        this.$http.post('https://api.brokalys.com/pinger', {
-          email: this.form.email,
-          categories: [this.form.category],
-          types: [this.form.type],
-          price_min: this.form.price_min,
-          price_max: this.form.price_max,
-        }).then(() => {
-          this.loading = false;
-          this.$message({
-            message: 'Lūdzu, pārbaudi savu e-pastu. Pēc e-pasta apstiprināšanas sāksi saņemt nek.īp. paziņojumus.',
-            type: 'success',
-            duration: 20000,
-          });
-        }).catch((response) => {
-          this.loading = false;
-          this.$message({
-            message: 'Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.',
-            type: 'error',
-            duration: 20000,
-          });
+        this.$http
+          .post("https://api.brokalys.com/pinger", {
+            email: this.form.email,
+            categories: [this.form.category],
+            types: [this.form.type],
+            price_min: this.form.price_min,
+            price_max: this.form.price_max
+          })
+          .then(() => {
+            this.loading = false;
+            this.$message({
+              message:
+                "Lūdzu, pārbaudi savu e-pastu. Pēc e-pasta apstiprināšanas sāksi saņemt nek.īp. paziņojumus.",
+              type: "success",
+              duration: 20000
+            });
+          })
+          .catch(response => {
+            this.loading = false;
+            this.$message({
+              message:
+                "Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.",
+              type: "error",
+              duration: 20000
+            });
 
-          if (window.bugsnagClient) {
-            window.bugsnagClient.metaData = { response };
-            window.bugsnagClient.notify('Unexpected error occurred when creating a new pinger.');
-          }
-        });
+            if (window.bugsnagClient) {
+              window.bugsnagClient.metaData = { response };
+              window.bugsnagClient.notify(
+                "Unexpected error occurred when creating a new pinger."
+              );
+            }
+          });
       });
     },
 
@@ -207,12 +265,13 @@ export default {
 
     handleClickForDelete($event) {
       if ($event.vertex) {
-        this.$refs.polygon.$polygonObject.getPaths()
+        this.$refs.polygon.$polygonObject
+          .getPaths()
           .getAt($event.path)
           .removeAt($event.vertex);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

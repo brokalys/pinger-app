@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name: 'SideMenu',
+  name: "SideMenu"
 };
 </script>
