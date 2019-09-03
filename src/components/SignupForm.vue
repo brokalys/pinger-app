@@ -88,11 +88,23 @@
           </el-col>
         </el-form-item>
 
-        <el-form-item prop="optin">
+        <el-form-item label="Komentāri" prop="comments">
+          <el-col>
+            <el-input
+              type="textarea"
+              placeholder="Ieteikumi, atsauksmes"
+              suffix-icon="el-icon-message"
+              v-model="form.comments"
+            >
+            </el-input>
+          </el-col>
+        </el-form-item>
+
+        <!-- <el-form-item prop="optin">
           <el-checkbox v-model="form.optin"
             >Es piekrītu privātuma politikai</el-checkbox
           >
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item>
           <el-button type="primary" @click="submitForm()" :loading="loading">
@@ -105,6 +117,10 @@
 </template>
 
 <script>
+function closeLoop(path) {
+  return path.concat(path.slice(0, 1));
+}
+
 export default {
   name: "SignupForm",
 
@@ -123,13 +139,13 @@ export default {
       return callback();
     };
 
-    const requiredTrue = (rule, value, callback) => {
-      if (value !== true) {
-        return callback(new Error("Šis lauciņš ir obligāti aizpildāms."));
-      }
+    // const requiredTrue = (rule, value, callback) => {
+    //   if (value !== true) {
+    //     return callback(new Error("Šis lauciņš ir obligāti aizpildāms."));
+    //   }
 
-      return callback();
-    };
+    //   return callback();
+    // };
 
     return {
       center: {
@@ -209,10 +225,44 @@ export default {
             trigger: "blur"
           },
           { validator: checkPrice, trigger: "blur" }
-        ],
-        optin: [{ validator: requiredTrue, trigger: "blur" }]
+        ]
+        // optin: [{ validator: requiredTrue, trigger: "blur" }]
       }
     };
+  },
+
+  watch: {
+    polygonPaths: function(paths) {
+      if (paths) {
+        this.paths = paths;
+        this.polygonGeojson = JSON.stringify(
+          {
+            type: "Polygon",
+            coordinates: this.paths.map(path =>
+              closeLoop(path.map(({ lat, lng }) => [lng, lat]))
+            )
+          },
+          null,
+          2
+        );
+      }
+    }
+  },
+
+  computed: {
+    polygonPaths: function() {
+      if (!this.mvcPaths) return null;
+      let paths = [];
+      for (let i = 0; i < this.mvcPaths.getLength(); i++) {
+        let path = [];
+        for (let j = 0; j < this.mvcPaths.getAt(i).getLength(); j++) {
+          let point = this.mvcPaths.getAt(i).getAt(j);
+          path.push({ lat: point.lat(), lng: point.lng() });
+        }
+        paths.push(path);
+      }
+      return paths;
+    }
   },
 
   methods: {
@@ -222,20 +272,39 @@ export default {
           return;
         }
 
+        const parts = this.paths[0].slice(0, -1);
+        const region = parts.map(
+          row => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`
+        );
+
         this.loading = true;
         this.$http
-          .post("https://api.brokalys.com/pinger", {
-            email: this.form.email,
-            categories: [this.form.category],
-            types: [this.form.type],
-            price_min: this.form.price_min,
-            price_max: this.form.price_max
+          .post("https://api.brokalys.com/", {
+            query: `mutation {
+              createPinger(
+                email: "${this.form.email}",
+                category: ${this.form.category.toUpperCase()},
+                type: ${this.form.type.toUpperCase()},
+                price_min: ${this.form.price_min},
+                price_max: ${this.form.price_max},
+                ${
+                  this.form.comments
+                    ? `comments: ${JSON.stringify(this.form.comments)},`
+                    : ""
+                }
+                region: "${region.join(", ")}"
+              )
+            }`
           })
-          .then(() => {
+          .then(response => {
+            if (response.body.errors) {
+              throw response;
+            }
+
             this.loading = false;
             this.$message({
               message:
-                "Lūdzu, pārbaudi savu e-pastu. Pēc e-pasta apstiprināšanas sāksi saņemt nek.īp. paziņojumus.",
+                "Turpmāk e-pastā saņemsi NĪ paziņojumus, kas atbilst tevis izvēlētajiem kritērijiem.",
               type: "success",
               duration: 20000
             });
