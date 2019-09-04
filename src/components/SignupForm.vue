@@ -68,6 +68,44 @@
           </el-col>
         </el-form-item>
 
+        <el-form-item label="Istabas (no, līdz)">
+          <el-col :span="11">
+            <el-form-item prop="rooms_min">
+              <el-input v-model.number="form.rooms_min" auto-complete="off">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-form-item prop="rooms_max">
+              <el-input v-model.number="form.rooms_max" auto-complete="off">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+
+        <el-form-item label="Platība (no, līdz)">
+          <el-col :span="11">
+            <el-form-item prop="area_m2_min">
+              <el-input v-model.number="form.area_m2_min" auto-complete="off">
+                <template slot="append"
+                  >m2</template
+                >
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-form-item prop="area_m2_max">
+              <el-input v-model.number="form.area_m2_max" auto-complete="off">
+                <template slot="append"
+                  >m2</template
+                >
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+
         <el-form-item label="Reģions" required>
           <el-col>
             <gmap-map
@@ -125,14 +163,14 @@ export default {
   name: "SignupForm",
 
   data() {
-    const checkPrice = (rule, value, callback) => {
+    const greaterThan = field => (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("Šis lauciņš ir obligāti aizpildāms."));
+        return callback();
       }
 
-      if (this.form.price_min >= value) {
+      if (this.form[field] >= value) {
         return callback(
-          new Error("Cenai /līdz/ ir jābūt mazākai par cenu /no/.")
+          new Error("Lauciņam /no/ ir jābūt lielākam par lauciņu /līdz/.")
         );
       }
 
@@ -159,8 +197,7 @@ export default {
           { lng: 24.005336060806712, lat: 56.92490408641493 },
           { lng: 24.108466782852588, lat: 56.889287904181955 },
           { lng: 24.291935029312526, lat: 56.93221057479092 },
-          { lng: 24.24517618684422, lat: 56.99650208638349 },
-          { lng: 24.1366192486729, lat: 56.9922942350075 }
+          { lng: 24.24517618684422, lat: 56.99650208638349 }
         ]
       ],
       mvcPaths: null,
@@ -172,6 +209,10 @@ export default {
         type: "sell",
         price_min: "",
         price_max: "",
+        rooms_min: null,
+        rooms_max: null,
+        area_m2_min: null,
+        area_m2_max: null,
         optin: false
       },
       rules: {
@@ -224,7 +265,37 @@ export default {
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
             trigger: "blur"
           },
-          { validator: checkPrice, trigger: "blur" }
+          { validator: greaterThan("price_min"), trigger: "blur" }
+        ],
+        rooms_min: [
+          {
+            type: "integer",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            trigger: "blur"
+          }
+        ],
+        rooms_max: [
+          {
+            type: "integer",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            trigger: "blur"
+          },
+          { validator: greaterThan("rooms_min"), trigger: "blur" }
+        ],
+        area_m2_min: [
+          {
+            type: "integer",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            trigger: "blur"
+          }
+        ],
+        area_m2_max: [
+          {
+            type: "integer",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            trigger: "blur"
+          },
+          { validator: greaterThan("area_m2_min"), trigger: "blur" }
         ]
         // optin: [{ validator: requiredTrue, trigger: "blur" }]
       }
@@ -287,6 +358,26 @@ export default {
                 type: ${this.form.type.toUpperCase()},
                 price_min: ${this.form.price_min},
                 price_max: ${this.form.price_max},
+                ${
+                  this.form.rooms_min
+                    ? `rooms_min: ${this.form.rooms_min},`
+                    : ""
+                }
+                ${
+                  this.form.rooms_max
+                    ? `rooms_max: ${this.form.rooms_max},`
+                    : ""
+                }
+                ${
+                  this.form.area_m2_min
+                    ? `area_m2_min: ${this.form.area_m2_min},`
+                    : ""
+                }
+                ${
+                  this.form.area_m2_max
+                    ? `area_m2_max: ${this.form.area_m2_max},`
+                    : ""
+                }
                 ${
                   this.form.comments
                     ? `comments: ${JSON.stringify(this.form.comments)},`
