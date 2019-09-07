@@ -17,8 +17,7 @@ Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(VueGoogleMaps, {
   load: {
-    // @todo: move to .env config
-    key: "AIzaSyADke6h-GKt5dPB8IcjVeQ0lAaC1wL_LwY"
+    key: process.env.VUE_APP_GMAPS_KEY
   }
 });
 
