@@ -387,6 +387,20 @@ export default {
           })
           .catch(response => {
             this.loading = false;
+
+            const { errors } = response.data;
+
+            if (errors.length > 0 && errors[0].extensions.exception && errors[0].extensions.exception.maxPingers) {
+              const maxPingers = errors[0].extensions.exception.maxPingers;
+              this.$message({
+                message:
+                  `Diemžēl, vienai e-pasta adresei var pievienot tikai ${maxPingers} NĪ paziņojumus.`,
+                type: "error",
+                duration: 20000
+              });
+              return;
+            }
+
             this.$message({
               message:
                 "Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.",
