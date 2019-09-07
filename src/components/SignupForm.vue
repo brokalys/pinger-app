@@ -138,12 +138,6 @@
           </el-col>
         </el-form-item>
 
-        <!-- <el-form-item prop="optin">
-          <el-checkbox v-model="form.optin"
-            >Es piekrītu privātuma politikai</el-checkbox
-          >
-        </el-form-item> -->
-
         <el-form-item>
           <el-button type="primary" @click="submitForm()" :loading="loading">
             Saņemt nek.īp. paziņojumus
@@ -176,14 +170,6 @@ export default {
 
       return callback();
     };
-
-    // const requiredTrue = (rule, value, callback) => {
-    //   if (value !== true) {
-    //     return callback(new Error("Šis lauciņš ir obligāti aizpildāms."));
-    //   }
-
-    //   return callback();
-    // };
 
     return {
       center: {
@@ -297,7 +283,6 @@ export default {
           },
           { validator: greaterThan("area_m2_min"), trigger: "blur" }
         ]
-        // optin: [{ validator: requiredTrue, trigger: "blur" }]
       }
     };
   },
