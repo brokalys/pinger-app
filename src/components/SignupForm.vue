@@ -343,7 +343,7 @@ export default {
           return;
         }
 
-        const parts = this.paths[0].slice(0, -1);
+        const parts = this.paths[0];
         const region = parts.map(
           row => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`
         );
