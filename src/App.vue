@@ -8,13 +8,11 @@
 
 <script>
 import SignupForm from "./components/SignupForm";
-import SideMenu from "./components/SideMenu";
 
 export default {
   name: "App",
   components: {
-    SignupForm,
-    SideMenu
+    SignupForm
   }
 };
 </script>

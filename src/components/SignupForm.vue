@@ -50,9 +50,7 @@
           <el-col :span="11">
             <el-form-item prop="price_min">
               <el-input v-model.number="form.price_min" auto-complete="off">
-                <template slot="append"
-                  >EUR</template
-                >
+                <template slot="append">EUR</template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -60,9 +58,7 @@
           <el-col :span="11">
             <el-form-item prop="price_max">
               <el-input v-model.number="form.price_max" auto-complete="off">
-                <template slot="append"
-                  >EUR</template
-                >
+                <template slot="append">EUR</template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -88,9 +84,7 @@
           <el-col :span="11">
             <el-form-item prop="area_m2_min">
               <el-input v-model.number="form.area_m2_min" auto-complete="off">
-                <template slot="append"
-                  >m2</template
-                >
+                <template slot="append">m2</template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -98,9 +92,7 @@
           <el-col :span="11">
             <el-form-item prop="area_m2_max">
               <el-input v-model.number="form.area_m2_max" auto-complete="off">
-                <template slot="append"
-                  >m2</template
-                >
+                <template slot="append">m2</template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -149,6 +141,8 @@
 </template>
 
 <script>
+import bugsnagClient from "../bugsnag";
+
 function closeLoop(path) {
   return path.concat(path.slice(0, 1));
 }
@@ -279,7 +273,8 @@ export default {
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
-            trigger: "blur"
+            trigger: "blur",
+            max: 100
           },
           { validator: greaterThan("area_m2_min"), trigger: "blur" }
         ]
@@ -411,12 +406,10 @@ export default {
               duration: 20000
             });
 
-            if (window.bugsnagClient) {
-              window.bugsnagClient.metaData = { response };
-              window.bugsnagClient.notify(
-                "Unexpected error occurred when creating a new pinger."
-              );
-            }
+            bugsnagClient.metaData = { response };
+            bugsnagClient.notify(
+              "Unexpected error occurred when creating a new pinger."
+            );
           });
       });
     },
