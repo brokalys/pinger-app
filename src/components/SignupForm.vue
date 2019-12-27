@@ -272,7 +272,7 @@ export default {
         area_m2_max: [
           {
             type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus līdz 100.",
             trigger: "blur",
             max: 100
           },
