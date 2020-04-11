@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.d62915efaac7e6468fa97b028d392f53.js"
+  "/precache-manifest.36aaea01c4cbb96cde4c25f1e211a2df.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "pinger"});
