@@ -7,7 +7,6 @@
   "scripts": {
     "start": "BABEL_ENV=dev vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "test": "BABEL_ENV=test jest --coverage",
     "deploy": "yarn build && cp CNAME dist && gh-pages -d dist",
     "build": "BABEL_ENV=dev vue-cli-service build"
   },
@@ -24,14 +23,11 @@
     "@babel/preset-env": "^7.5.5",
     "@vue/cli-plugin-babel": "^4.1.1",
     "@vue/cli-plugin-eslint": "^4.1.1",
-    "@vue/cli-plugin-pwa": "^4.1.1",
-    "@vue/cli-plugin-unit-jest": "^4.1.1",
     "@vue/cli-service": "^4.1.1",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
-    "babel-jest": "^25.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.1",
