@@ -1,5 +1,7 @@
 # pinger
 
+**DISCLAIMER:** the code-quality in this project is absolutely terrible. It is NOT a good example of my work.
+
 > Brokalys real estate notifications
 
 ## Build Setup
