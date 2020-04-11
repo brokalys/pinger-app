@@ -103,7 +103,7 @@
             <gmap-map
               :center="center"
               :zoom="10"
-              style="width: 100%; height: 300px"
+              style="width: 100%; height: 300px;"
               ref="map"
             >
               <gmap-polygon
@@ -151,7 +151,7 @@ export default {
   name: "SignupForm",
 
   data() {
-    const greaterThan = field => (rule, value, callback) => {
+    const greaterThan = (field) => (rule, value, callback) => {
       if (!value) {
         return callback();
       }
@@ -168,7 +168,7 @@ export default {
     return {
       center: {
         lat: 56.98,
-        lng: 24.105078
+        lng: 24.105078,
       },
       paths: [
         [
@@ -177,8 +177,8 @@ export default {
           { lng: 24.005336060806712, lat: 56.92490408641493 },
           { lng: 24.108466782852588, lat: 56.889287904181955 },
           { lng: 24.291935029312526, lat: 56.93221057479092 },
-          { lng: 24.24517618684422, lat: 56.99650208638349 }
-        ]
+          { lng: 24.24517618684422, lat: 56.99650208638349 },
+        ],
       ],
       mvcPaths: null,
       loading: false,
@@ -193,115 +193,115 @@ export default {
         rooms_max: null,
         area_m2_min: null,
         area_m2_max: null,
-        optin: false
+        optin: false,
       },
       rules: {
         email: [
           {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             type: "email",
             message: "Pārbaudi e-pasta adresi.",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         category: [
           {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         type: [
           {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         price_min: [
           {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         price_max: [
           {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { validator: greaterThan("price_min"), trigger: "blur" }
+          { validator: greaterThan("price_min"), trigger: "blur" },
         ],
         rooms_min: [
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         rooms_max: [
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { validator: greaterThan("rooms_min"), trigger: "blur" }
+          { validator: greaterThan("rooms_min"), trigger: "blur" },
         ],
         area_m2_min: [
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         area_m2_max: [
           {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus līdz 100.",
             trigger: "blur",
-            max: 100
+            max: 100,
           },
-          { validator: greaterThan("area_m2_min"), trigger: "blur" }
-        ]
-      }
+          { validator: greaterThan("area_m2_min"), trigger: "blur" },
+        ],
+      },
     };
   },
 
   watch: {
-    polygonPaths: function(paths) {
+    polygonPaths: function (paths) {
       if (paths) {
         this.paths = paths;
         this.polygonGeojson = JSON.stringify(
           {
             type: "Polygon",
-            coordinates: this.paths.map(path =>
+            coordinates: this.paths.map((path) =>
               closeLoop(path.map(({ lat, lng }) => [lng, lat]))
-            )
+            ),
           },
           null,
           2
         );
       }
-    }
+    },
   },
 
   computed: {
-    polygonPaths: function() {
+    polygonPaths: function () {
       if (!this.mvcPaths) return null;
       let paths = [];
       for (let i = 0; i < this.mvcPaths.getLength(); i++) {
@@ -313,19 +313,19 @@ export default {
         paths.push(path);
       }
       return paths;
-    }
+    },
   },
 
   methods: {
     submitForm() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid === false) {
           return;
         }
 
         const parts = this.paths[0];
         const region = parts.map(
-          row => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`
+          (row) => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`
         );
 
         this.loading = true;
@@ -365,9 +365,9 @@ export default {
                 }
                 region: "${region.join(", ")}"
               )
-            }`
+            }`,
           })
-          .then(response => {
+          .then((response) => {
             if (response.body.errors) {
               throw response;
             }
@@ -377,10 +377,10 @@ export default {
               message:
                 "Turpmāk e-pastā saņemsi NĪ paziņojumus, kas atbilst tevis izvēlētajiem kritērijiem.",
               type: "success",
-              duration: 20000
+              duration: 20000,
             });
           })
-          .catch(response => {
+          .catch((response) => {
             this.loading = false;
 
             const { errors } = response.data;
@@ -394,7 +394,7 @@ export default {
               this.$message({
                 message: `Diemžēl, vienai e-pasta adresei var pievienot tikai ${maxPingers} NĪ paziņojumus.`,
                 type: "error",
-                duration: 20000
+                duration: 20000,
               });
               return;
             }
@@ -403,7 +403,7 @@ export default {
               message:
                 "Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.",
               type: "error",
-              duration: 20000
+              duration: 20000,
             });
 
             bugsnagClient.metaData = { response };
@@ -425,8 +425,8 @@ export default {
           .getAt($event.path)
           .removeAt($event.vertex);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

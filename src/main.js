@@ -13,12 +13,12 @@ Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(VueGoogleMaps, {
   load: {
-    key: process.env.VUE_APP_GMAPS_KEY
-  }
+    key: process.env.VUE_APP_GMAPS_KEY,
+  },
 });
 
 /* eslint-disable no-new */
 new Vue({
-  render: h => h(App),
-  components: { App }
+  render: (h) => h(App),
+  components: { App },
 }).$mount("#app");
