@@ -272,9 +272,9 @@ export default {
         area_m2_max: [
           {
             type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus līdz 100.",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus līdz 1000.",
             trigger: "blur",
-            max: 100,
+            max: 1000,
           },
           { validator: greaterThan("area_m2_min"), trigger: "blur" },
         ],
