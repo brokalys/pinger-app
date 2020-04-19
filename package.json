@@ -4,7 +4,7 @@
   "description": "Brokalys real estate notifications",
   "author": "Matiss Janis Aboltins <matiss@mja.lv>",
   "scripts": {
-    "build": "vue-cli-service build --modern && cp CNAME dist && cp -r static dist",
+    "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve"
   },
@@ -28,6 +28,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
     "babel-plugin-component": "^1.1.1",
+    "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-graphql": "^3.1.1",
     "eslint-plugin-prettier": "^3.1.2",
