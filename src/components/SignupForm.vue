@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { Message } from 'element-ui';
+import { Message } from "element-ui";
 import bugsnagClient from "../bugsnag";
 import GET_PINGER_STATS from "../graphql/GetPingerStats.gql";
 import CREATE_PINGER from "../graphql/CreatePinger.gql";
@@ -375,6 +375,9 @@ export default {
               return;
             }
 
+            throw error;
+          })
+          .catch((error) => {
             Message({
               message:
                 "Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.",
@@ -382,7 +385,7 @@ export default {
               duration: 20000,
             });
 
-            bugsnagClient.addMetadata("Errors", errors);
+            bugsnagClient.addMetadata("Errors", { ...error });
             bugsnagClient.notify(
               "Unexpected error occurred when creating a new pinger."
             );
