@@ -1,8 +1,20 @@
 import "element-ui/lib/theme-chalk/index.css";
 
 import Vue from "vue";
-import ElementUI from "element-ui";
-import VueResource from "vue-resource";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  FormItem,
+  Input,
+  Main,
+  Option,
+  Progress,
+  Row,
+  Select,
+} from "element-ui";
 import * as VueGoogleMaps from "vue2-google-maps";
 import App from "./App";
 import "./bugsnag";
@@ -10,8 +22,20 @@ import { createProvider } from "./vue-apollo";
 
 Vue.config.productionTip = false;
 
-Vue.use(ElementUI);
-Vue.use(VueResource);
+// Element UI
+Vue.use(Alert);
+Vue.use(Button);
+Vue.use(Col);
+Vue.use(Container);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Input);
+Vue.use(Main);
+Vue.use(Option);
+Vue.use(Progress);
+Vue.use(Row);
+Vue.use(Select);
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: process.env.VUE_APP_GMAPS_KEY,
