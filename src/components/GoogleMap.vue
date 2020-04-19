@@ -25,12 +25,17 @@
 </template>
 
 <script>
+import { loadGmapApi } from "vue2-google-maps";
+
 function closeLoop(path) {
   return path.concat(path.slice(0, 1));
 }
 
 export default {
   name: "GoogleMap",
+  created() {
+    loadGmapApi({ key: process.env.VUE_APP_GMAPS_KEY });
+  },
   data() {
     return {
       center: {

@@ -38,11 +38,7 @@ Vue.use(Progress);
 Vue.use(Row);
 Vue.use(Select);
 
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: process.env.VUE_APP_GMAPS_KEY,
-  },
-});
+Vue.use(VueGoogleMaps);
 
 /* eslint-disable no-new */
 new Vue({
