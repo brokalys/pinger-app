@@ -16,10 +16,7 @@
       >
         <el-form-item label="E-pasta adrese" prop="email">
           <el-col :span="11">
-            <el-input
-              placeholder="demo@brokalys.com"
-              v-model="form.email"
-            >
+            <el-input placeholder="demo@brokalys.com" v-model="form.email">
             </el-input>
           </el-col>
         </el-form-item>

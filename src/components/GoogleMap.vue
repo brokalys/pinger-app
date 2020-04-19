@@ -27,14 +27,12 @@
 <script>
 import { loadGmapApi } from "vue2-google-maps";
 
-function closeLoop(path) {
-  return path.concat(path.slice(0, 1));
-}
-
 export default {
   name: "GoogleMap",
   created() {
-    loadGmapApi({ key: process.env.VUE_APP_GMAPS_KEY });
+    try {
+      loadGmapApi({ key: process.env.VUE_APP_GMAPS_KEY });
+    } catch (e) {}
   },
   data() {
     return {
@@ -52,58 +50,18 @@ export default {
           { lng: 24.24517618684422, lat: 56.99650208638349 },
         ],
       ],
-      mvcPaths: null,
     };
-  },
-
-  watch: {
-    polygonPaths: function (paths) {
-      if (paths) {
-        this.paths = paths;
-        this.polygonGeojson = JSON.stringify(
-          {
-            type: "Polygon",
-            coordinates: this.paths.map((path) =>
-              closeLoop(path.map(({ lat, lng }) => [lng, lat]))
-            ),
-          },
-          null,
-          2
-        );
-      }
-    },
-
-    paths: {
-      handler() {
-        const region = this.paths[0]
-          .map((row) => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`)
-          .join(", ");
-
-        this.$emit("update:region", region);
-      },
-      immediate: true,
-    },
-  },
-
-  computed: {
-    polygonPaths: function () {
-      if (!this.mvcPaths) return null;
-      let paths = [];
-      for (let i = 0; i < this.mvcPaths.getLength(); i++) {
-        let path = [];
-        for (let j = 0; j < this.mvcPaths.getAt(i).getLength(); j++) {
-          let point = this.mvcPaths.getAt(i).getAt(j);
-          path.push({ lat: point.lat(), lng: point.lng() });
-        }
-        paths.push(path);
-      }
-      return paths;
-    },
   },
 
   methods: {
     updateEdited(mvcPaths) {
-      this.mvcPaths = mvcPaths;
+      const region = mvcPaths
+        .getAt(0)
+        .getArray()
+        .map((row) => [row.lat().toFixed(6), row.lng().toFixed(6)].join(" "))
+        .join(", ");
+
+      this.$emit("update:region", region);
     },
 
     handleClickForDelete($event) {
