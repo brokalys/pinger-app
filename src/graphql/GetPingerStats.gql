@@ -1,0 +1,25 @@
+query getPingerStats(
+  $category: Category!
+  $type: Type!
+  $price_min: Int!
+  $price_max: Int!
+  $region: String!
+  $rooms_min: Int
+  $rooms_max: Int
+  $area_m2_min: Int
+  $area_m2_max: Int
+) {
+  getPingerStats(
+    category: $category
+    type: $type
+    price_min: $price_min
+    price_max: $price_max
+    region: $region
+    rooms_min: $rooms_min
+    rooms_max: $rooms_max
+    area_m2_min: $area_m2_min
+    area_m2_max: $area_m2_max
+  ) {
+    pingers_last_month
+  }
+}

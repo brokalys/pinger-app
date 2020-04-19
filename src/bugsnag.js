@@ -2,9 +2,11 @@ import Vue from "vue";
 import Bugsnag from "@bugsnag/js";
 import BugsnagPluginVue from "@bugsnag/plugin-vue";
 
-Bugsnag.start({
-  apiKey: '3291a08204a007079100568b7fa44efc',
-  plugins: [new BugsnagPluginVue(Vue)],
-});
+if (process.env.VUA_BUGSNAG_KEY) {
+  Bugsnag.start({
+    apiKey: process.env.VUA_BUGSNAG_KEY,
+    plugins: [new BugsnagPluginVue(Vue)],
+  });
+}
 
 export default Bugsnag;

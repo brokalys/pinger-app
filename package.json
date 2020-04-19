@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "Brokalys real estate notifications",
   "author": "Matiss Janis Aboltins <matiss@mja.lv>",
-  "private": true,
   "scripts": {
-    "start": "BABEL_ENV=dev vue-cli-service serve",
+    "build": "BABEL_ENV=dev vue-cli-service build && cp CNAME dist",
     "lint": "vue-cli-service lint",
-    "build": "BABEL_ENV=dev vue-cli-service build && cp CNAME dist"
+    "start": "BABEL_ENV=dev vue-cli-service serve"
   },
   "dependencies": {
     "@bugsnag/js": "^7.0.0",
     "@bugsnag/plugin-vue": "^7.0.0",
     "element-ui": "^2.3.2",
     "vue": "^2.5.2",
+    "vue-apollo": "^3.0.0-beta.11",
     "vue-resource": "^1.5.0",
     "vue2-google-maps": "^0.10.7"
   },
@@ -30,11 +30,13 @@
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.1",
+    "graphql-tag": "^2.9.0",
     "lint-staged": "^10.0.8",
     "node-sass": "^4.12.0",
     "nyc": "^15.0.0",
     "prettier": "^2.0.4",
     "sass-loader": "^8.0.0",
+    "vue-cli-plugin-apollo": "~0.21.3",
     "vue-template-compiler": "^2.6.10"
   }
 }

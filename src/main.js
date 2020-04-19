@@ -6,6 +6,7 @@ import VueResource from "vue-resource";
 import * as VueGoogleMaps from "vue2-google-maps";
 import App from "./App";
 import "./bugsnag";
+import { createProvider } from "./vue-apollo";
 
 Vue.config.productionTip = false;
 
@@ -20,5 +21,6 @@ Vue.use(VueGoogleMaps, {
 /* eslint-disable no-new */
 new Vue({
   render: (h) => h(App),
+  apolloProvider: createProvider(),
   components: { App },
 }).$mount("#app");

@@ -29,9 +29,9 @@
           <el-col :span="11">
             <el-form-item label="Nekustamā īpašuma tips" prop="category">
               <el-select v-model="form.category">
-                <el-option label="Dzīvoklis" value="apartment"></el-option>
-                <el-option label="Māja" value="house"></el-option>
-                <el-option label="Zeme" value="land"></el-option>
+                <el-option label="Dzīvoklis" value="APARTMENT"></el-option>
+                <el-option label="Māja" value="HOUSE"></el-option>
+                <el-option label="Zeme" value="LAND"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -39,8 +39,8 @@
           <el-col :span="11" :offset="2">
             <el-form-item label="Darījuma veids" prop="type">
               <el-select v-model="form.type">
-                <el-option label="Pārdod" value="sell"></el-option>
-                <el-option label="Īrē" value="rent"></el-option>
+                <el-option label="Pārdod" value="SELL"></el-option>
+                <el-option label="Īrē" value="RENT"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -101,6 +101,14 @@
         <el-form-item label="Reģions" required>
           <el-col>
             <gmap-map
+              :options="{
+                zoomControl: true,
+                mapTypeControl: false,
+                scaleControl: false,
+                streetViewControl: false,
+                rotateControl: false,
+                fullscreenControl: false,
+              }"
               :center="center"
               :zoom="10"
               style="width: 100%; height: 300px;"
@@ -130,6 +138,27 @@
           </el-col>
         </el-form-item>
 
+        <div
+          v-if="freeLimit !== undefined"
+          v-loading="$apollo.queries.freeLimit.loading"
+        >
+          <el-progress :percentage="freeLimit.percentage"></el-progress>
+          <el-alert
+            :title="selectedMonthlyEmailsTitle"
+            type="info"
+            :closable="false"
+          ></el-alert>
+
+          <template v-if="freeLimit.percentage >= 90">
+            <el-alert
+              :title="maxMonthlyEmailsTitle"
+              :description="maxMonthlyEmailsDescription"
+              type="warning"
+              :closable="false"
+            ></el-alert>
+          </template>
+        </div>
+
         <el-form-item>
           <el-button type="primary" @click="submitForm()" :loading="loading">
             Saņemt nek.īp. paziņojumus
@@ -142,6 +171,10 @@
 
 <script>
 import bugsnagClient from "../bugsnag";
+import GET_PINGER_STATS from "../graphql/GetPingerStats.gql";
+import CREATE_PINGER from "../graphql/CreatePinger.gql";
+
+const PINGER_LIMIT_PER_EMAIL = 100;
 
 function closeLoop(path) {
   return path.concat(path.slice(0, 1));
@@ -149,6 +182,44 @@ function closeLoop(path) {
 
 export default {
   name: "SignupForm",
+
+  apollo: {
+    freeLimit: {
+      query: GET_PINGER_STATS,
+      variables() {
+        return {
+          ...this.form,
+          region: this.region,
+        };
+      },
+      debounce: 1500,
+      update(data) {
+        if (!data.getPingerStats) return;
+
+        const pingers = data.getPingerStats.pingers_last_month;
+        return {
+          amount: pingers,
+          percentage:
+            pingers > PINGER_LIMIT_PER_EMAIL
+              ? 100
+              : (pingers / PINGER_LIMIT_PER_EMAIL) * 100,
+        };
+      },
+      skip() {
+        if (
+          !this.form.category ||
+          !this.form.type ||
+          this.form.price_min === undefined ||
+          this.form.price_max === undefined ||
+          !this.region
+        ) {
+          return true;
+        }
+
+        return false;
+      },
+    },
+  },
 
   data() {
     const greaterThan = (field) => (rule, value, callback) => {
@@ -182,17 +253,18 @@ export default {
       ],
       mvcPaths: null,
       loading: false,
+      region: "",
 
       form: {
         email: "",
-        category: "apartment",
-        type: "sell",
-        price_min: "",
-        price_max: "",
-        rooms_min: null,
-        rooms_max: null,
-        area_m2_min: null,
-        area_m2_max: null,
+        category: "APARTMENT",
+        type: "SELL",
+        price_min: undefined,
+        price_max: undefined,
+        rooms_min: undefined,
+        rooms_max: undefined,
+        area_m2_min: undefined,
+        area_m2_max: undefined,
         optin: false,
       },
       rules: {
@@ -227,6 +299,7 @@ export default {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
             trigger: "blur",
+            min: 1,
           },
           {
             type: "integer",
@@ -257,8 +330,9 @@ export default {
         rooms_max: [
           {
             type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus līds 20.",
             trigger: "blur",
+            max: 20,
           },
           { validator: greaterThan("rooms_min"), trigger: "blur" },
         ],
@@ -298,9 +372,27 @@ export default {
         );
       }
     },
+
+    paths: {
+      handler() {
+        this.region = this.paths[0]
+          .map((row) => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`)
+          .join(", ");
+      },
+      immediate: true,
+    },
   },
 
   computed: {
+    selectedMonthlyEmailsTitle: (vm) => {
+      if (!vm.freeLimit) return;
+      return `Pēc tevis izvēlētajiem kritērijiem - pagājušajā mēnesī atrasti ${vm.freeLimit.amount} sludinājumi, kas ir ${vm.freeLimit.percentage}% no bezmaksas limita.`;
+    },
+    maxMonthlyEmailsTitle: () =>
+      `Maksimālais bezmaksas e-pastu skaits mēnesī: ${PINGER_LIMIT_PER_EMAIL}`,
+    maxMonthlyEmailsDescription: () =>
+      `Katru mēnesi vairāki simti lietotāji saņem bezmaksas e-pastus no Brokalys par aktuālajiem nekustāmajiem īpašumiem Latvijā. Lai nodrošinātu tik pat augstu servisu kā līdz šim,  esam spiesti ierobežot nosūtītu e-pastu skaitu katram lietotājam. Citiem vārdiem sakot - mēneša laikā nesaņemsi vairāk par  ${PINGER_LIMIT_PER_EMAIL} e-pastiem.`,
+
     polygonPaths: function () {
       if (!this.mvcPaths) return null;
       let paths = [];
@@ -323,56 +415,16 @@ export default {
           return;
         }
 
-        const parts = this.paths[0];
-        const region = parts.map(
-          (row) => `${row.lat.toFixed(6)} ${row.lng.toFixed(6)}`
-        );
-
         this.loading = true;
-        this.$http
-          .post("https://api.brokalys.com/", {
-            query: `mutation {
-              createPinger(
-                email: "${this.form.email}",
-                category: ${this.form.category.toUpperCase()},
-                type: ${this.form.type.toUpperCase()},
-                price_min: ${this.form.price_min},
-                price_max: ${this.form.price_max},
-                ${
-                  this.form.rooms_min
-                    ? `rooms_min: ${this.form.rooms_min},`
-                    : ""
-                }
-                ${
-                  this.form.rooms_max
-                    ? `rooms_max: ${this.form.rooms_max},`
-                    : ""
-                }
-                ${
-                  this.form.area_m2_min
-                    ? `area_m2_min: ${this.form.area_m2_min},`
-                    : ""
-                }
-                ${
-                  this.form.area_m2_max
-                    ? `area_m2_max: ${this.form.area_m2_max},`
-                    : ""
-                }
-                ${
-                  this.form.comments
-                    ? `comments: ${JSON.stringify(this.form.comments)},`
-                    : ""
-                }
-                region: "${region.join(", ")}"
-              )
-            }`,
+        this.$apollo
+          .mutate({
+            mutation: CREATE_PINGER,
+            variables: {
+              ...this.form,
+              region: this.region,
+            },
           })
-          .then((response) => {
-            if (response.body.errors) {
-              throw response;
-            }
-
-            this.loading = false;
+          .then(() => {
             this.$message({
               message:
                 "Turpmāk e-pastā saņemsi NĪ paziņojumus, kas atbilst tevis izvēlētajiem kritērijiem.",
@@ -380,10 +432,14 @@ export default {
               duration: 20000,
             });
           })
-          .catch((response) => {
-            this.loading = false;
+          .catch((error) => {
+            let errors;
 
-            const { errors } = response.data;
+            if (error.networkError) {
+              errors = error.networkError.result.errors;
+            } else {
+              errors = error.graphQLErrors;
+            }
 
             if (
               errors.length > 0 &&
@@ -406,10 +462,13 @@ export default {
               duration: 20000,
             });
 
-            bugsnagClient.addMetadata('Response', response);
+            bugsnagClient.addMetadata("Errors", errors);
             bugsnagClient.notify(
               "Unexpected error occurred when creating a new pinger."
             );
+          })
+          .finally(() => {
+            this.loading = false;
           });
       });
     },
@@ -434,5 +493,9 @@ export default {
 .el-select,
 .el-form-item__label {
   width: 100%;
+}
+
+.el-alert {
+  margin: 20px 0;
 }
 </style>
