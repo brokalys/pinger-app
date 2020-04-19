@@ -4,7 +4,7 @@
   "description": "Brokalys real estate notifications",
   "author": "Matiss Janis Aboltins <matiss@mja.lv>",
   "scripts": {
-    "build": "vue-cli-service build && cp CNAME dist && cp -r static dist",
+    "build": "vue-cli-service build --modern && cp CNAME dist && cp -r static dist",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve"
   },

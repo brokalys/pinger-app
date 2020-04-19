@@ -299,7 +299,6 @@ export default {
             required: true,
             message: "Šis lauciņš ir obligāti aizpildāms.",
             trigger: "blur",
-            min: 1,
           },
           {
             type: "integer",
