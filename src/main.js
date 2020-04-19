@@ -9,6 +9,7 @@ import {
   Form,
   FormItem,
   Input,
+  Loading,
   Main,
   Option,
   Progress,
@@ -30,6 +31,7 @@ Vue.use(Container);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
+Vue.use(Loading);
 Vue.use(Main);
 Vue.use(Option);
 Vue.use(Progress);
