@@ -11,6 +11,7 @@
   "dependencies": {
     "@bugsnag/js": "^7.0.0",
     "@bugsnag/plugin-vue": "^7.0.0",
+    "core-js": "^3.6.4",
     "element-ui": "^2.3.2",
     "vue": "^2.5.2",
     "vue-apollo": "^3.0.0-beta.11",
