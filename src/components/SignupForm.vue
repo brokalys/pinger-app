@@ -143,6 +143,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui';
 import bugsnagClient from "../bugsnag";
 import GET_PINGER_STATS from "../graphql/GetPingerStats.gql";
 import CREATE_PINGER from "../graphql/CreatePinger.gql";
@@ -164,7 +165,7 @@ export default {
           region: this.region,
         };
       },
-      debounce: 1000,
+      debounce: 500,
       update(data) {
         if (!data.getPingerStats) return;
 
@@ -261,6 +262,7 @@ export default {
             type: "integer",
             message: "Šajā lauciņā var ievadīt tikai skaitļus.",
             trigger: "blur",
+            min: 1,
           },
         ],
         price_max: [
@@ -271,16 +273,18 @@ export default {
           },
           {
             type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            message: "Šajā lauciņā var ievadīt tikai skaitļus zem 10000000.",
             trigger: "blur",
+            max: 10000000,
           },
           { validator: greaterThan("price_min"), trigger: "blur" },
         ],
         rooms_min: [
           {
             type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            message: "Šajā lauciņā var ievadīt tikai pozitīvus skaitļus.",
             trigger: "blur",
+            min: 0,
           },
         ],
         rooms_max: [
@@ -295,8 +299,9 @@ export default {
         area_m2_min: [
           {
             type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus.",
+            message: "Šajā lauciņā var ievadīt tikai pozitīvus skaitļus.",
             trigger: "blur",
+            min: 0,
           },
         ],
         area_m2_max: [
@@ -340,7 +345,7 @@ export default {
             },
           })
           .then(() => {
-            this.$message({
+            Message({
               message:
                 "Turpmāk e-pastā saņemsi NĪ paziņojumus, kas atbilst tevis izvēlētajiem kritērijiem.",
               type: "success",
@@ -362,7 +367,7 @@ export default {
               errors[0].extensions.exception.maxPingers
             ) {
               const maxPingers = errors[0].extensions.exception.maxPingers;
-              this.$message({
+              Message({
                 message: `Diemžēl, vienai e-pasta adresei var pievienot tikai ${maxPingers} NĪ paziņojumus.`,
                 type: "error",
                 duration: 20000,
@@ -370,7 +375,7 @@ export default {
               return;
             }
 
-            this.$message({
+            Message({
               message:
                 "Oops, kaut kas nogāja greizi. Centīsimies atrisināt problēmu tuvākajā laikā.",
               type: "error",

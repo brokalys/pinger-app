@@ -33,6 +33,11 @@ export default {
     try {
       loadGmapApi({ key: process.env.VUE_APP_GMAPS_KEY });
     } catch (e) {}
+
+    const region = this.paths[0]
+      .map((row) => [row.lat.toFixed(6), row.lng.toFixed(6)].join(" "))
+      .join(", ");
+    this.$emit("update:region", region);
   },
   data() {
     return {
