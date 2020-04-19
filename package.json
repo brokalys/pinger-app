@@ -4,9 +4,9 @@
   "description": "Brokalys real estate notifications",
   "author": "Matiss Janis Aboltins <matiss@mja.lv>",
   "scripts": {
-    "build": "BABEL_ENV=dev vue-cli-service build && cp CNAME dist",
+    "build": "vue-cli-service build && cp CNAME dist",
     "lint": "vue-cli-service lint",
-    "start": "BABEL_ENV=dev vue-cli-service serve"
+    "start": "vue-cli-service serve"
   },
   "dependencies": {
     "@bugsnag/js": "^7.0.0",

@@ -10,6 +10,9 @@ jobs:
           persist-credentials: false
 
       - name: Install and Build 🔧
+        env: # Or as an environment variable
+          VUE_APP_GMAPS_KEY: ${{ secrets.VUE_APP_GMAPS_KEY }}
+          VUE_APP_BUGSNAG_KEY: ${{ secrets.VUE_APP_BUGSNAG_KEY }}
         run: |
           yarn install
           yarn build
