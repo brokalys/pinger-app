@@ -18,7 +18,6 @@
           <el-col :span="11">
             <el-input
               placeholder="demo@brokalys.com"
-              suffix-icon="el-icon-message"
               v-model="form.email"
             >
             </el-input>
@@ -109,7 +108,6 @@
             <el-input
               type="textarea"
               placeholder="Ieteikumi, atsauksmes"
-              suffix-icon="el-icon-message"
               v-model="form.comments"
             >
             </el-input>
