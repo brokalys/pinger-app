@@ -164,7 +164,7 @@ export default {
           region: this.region,
         };
       },
-      debounce: 1500,
+      debounce: 1000,
       update(data) {
         if (!data.getPingerStats) return;
 
