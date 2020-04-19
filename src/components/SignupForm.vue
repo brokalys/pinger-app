@@ -406,7 +406,7 @@ export default {
               duration: 20000,
             });
 
-            bugsnagClient.metaData = { response };
+            bugsnagClient.addMetadata('Response', response);
             bugsnagClient.notify(
               "Unexpected error occurred when creating a new pinger."
             );

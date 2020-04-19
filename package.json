@@ -10,8 +10,8 @@
     "build": "BABEL_ENV=dev vue-cli-service build && cp CNAME dist"
   },
   "dependencies": {
-    "@bugsnag/js": "^6.5.0",
-    "@bugsnag/plugin-vue": "^6.5.0",
+    "@bugsnag/js": "^7.0.0",
+    "@bugsnag/plugin-vue": "^7.0.0",
     "element-ui": "^2.3.2",
     "vue": "^2.5.2",
     "vue-resource": "^1.5.0",

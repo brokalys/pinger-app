@@ -1,8 +1,10 @@
 import Vue from "vue";
-import bugsnag from "@bugsnag/js";
-import bugsnagVue from "@bugsnag/plugin-vue";
+import Bugsnag from "@bugsnag/js";
+import BugsnagPluginVue from "@bugsnag/plugin-vue";
 
-const bugsnagClient = bugsnag("3291a08204a007079100568b7fa44efc");
-bugsnagClient.use(bugsnagVue, Vue);
+Bugsnag.start({
+  apiKey: '3291a08204a007079100568b7fa44efc',
+  plugins: [new BugsnagPluginVue(Vue)],
+});
 
-export default bugsnagClient;
+export default Bugsnag;
