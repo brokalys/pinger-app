@@ -5,6 +5,7 @@
   "author": "Matiss Janis Aboltins <matiss@mja.lv>",
   "scripts": {
     "build": "vue-cli-service build --modern",
+    "lighthouse": "lighthouse",
     "lint": "vue-cli-service lint",
     "start": "vue-cli-service serve"
   },
@@ -34,6 +35,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.1",
     "graphql-tag": "^2.9.0",
+    "lighthouse": "^5.6.0",
     "lint-staged": "^10.0.8",
     "node-sass": "^4.12.0",
     "nyc": "^15.0.0",
