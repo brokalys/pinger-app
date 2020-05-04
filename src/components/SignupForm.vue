@@ -7,6 +7,10 @@
         īpašuma sludinājumiem.
       </p>
 
+      <img src="./diagram.svg" alt="Diagram" />
+
+      <el-divider />
+
       <el-form
         ref="form"
         :model="form"
@@ -407,5 +411,9 @@ export default {
 
 .el-alert {
   margin: 20px 0;
+}
+
+img {
+  width: 100%;
 }
 </style>

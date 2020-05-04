@@ -6,6 +6,7 @@ import {
   Button,
   Col,
   Container,
+  Divider,
   Form,
   FormItem,
   Input,
@@ -28,6 +29,7 @@ Vue.use(Alert);
 Vue.use(Button);
 Vue.use(Col);
 Vue.use(Container);
+Vue.use(Divider);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
