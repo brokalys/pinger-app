@@ -148,6 +148,7 @@
 
 <script>
 import { Message } from "element-ui";
+import moment from "moment";
 import bugsnagClient from "../bugsnag";
 import GET_PINGER_STATS from "../graphql/GetPingerStats.gql";
 import CREATE_PINGER from "../graphql/CreatePinger.gql";
@@ -164,16 +165,29 @@ export default {
     freeLimit: {
       query: GET_PINGER_STATS,
       variables() {
+        const form = { ...this.form };
+        delete form.email;
+
         return {
-          ...this.form,
+          ...form,
           region: this.region,
+          published_at_start: moment()
+            .utc()
+            .startOf("month")
+            .subtract(1, "month")
+            .toISOString(),
+          published_at_end: moment()
+            .utc()
+            .endOf("month")
+            .subtract(1, "month")
+            .toISOString(),
         };
       },
       debounce: 500,
       update(data) {
-        if (!data.getPingerStats) return;
+        if (!data.properties) return;
 
-        const pingers = data.getPingerStats.pingers_last_month;
+        const pingers = data.properties.summary.count;
         return {
           amount: pingers,
           percentage:

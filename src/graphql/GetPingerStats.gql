@@ -1,25 +1,41 @@
 query getPingerStats(
-  $category: Category!
-  $type: Type!
+  $category: String!
+  $type: String!
   $price_min: Int!
   $price_max: Int!
-  $region: String!
+  $region: [String!]!
   $rooms_min: Int
   $rooms_max: Int
   $area_m2_min: Int
   $area_m2_max: Int
+  $published_at_start: String!
+  $published_at_end: String!
 ) {
-  getPingerStats(
-    category: $category
-    type: $type
-    price_min: $price_min
-    price_max: $price_max
-    region: $region
-    rooms_min: $rooms_min
-    rooms_max: $rooms_max
-    area_m2_min: $area_m2_min
-    area_m2_max: $area_m2_max
+  properties(
+    filter: {
+      category: { eq: $category }
+      type: { eq: $type }
+      region: { in: $region }
+      price: {
+        gte: $price_min
+        lte: $price_max
+      }
+      rooms: {
+        gte: $rooms_min
+        lte: $rooms_max
+      }
+      area: {
+        gte: $area_m2_min
+        lte: $area_m2_max
+      }
+      published_at: {
+        gte: $published_at_start
+        lt: $published_at_end
+      }
+    }
   ) {
-    pingers_last_month
+    summary {
+      count
+    }
   }
 }

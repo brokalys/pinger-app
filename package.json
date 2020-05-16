@@ -13,6 +13,7 @@
     "@bugsnag/plugin-vue": "^7.0.0",
     "core-js": "^3.6.4",
     "element-ui": "^2.3.2",
+    "moment": "^2.25.3",
     "vue": "^2.5.2",
     "vue-apollo": "^3.0.0-beta.11",
     "vue2-google-maps": "^0.10.7"
@@ -28,8 +29,8 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
     "babel-plugin-component": "^1.1.1",
-    "copy-webpack-plugin": "^5.1.1",
-    "eslint": "^6.8.0",
+    "copy-webpack-plugin": "^6.0.1",
+    "eslint": "^7.0.0",
     "eslint-plugin-graphql": "^3.1.1",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^6.1.1",

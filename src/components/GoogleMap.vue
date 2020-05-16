@@ -34,10 +34,11 @@ export default {
       loadGmapApi({ key: process.env.VUE_APP_GMAPS_KEY });
     } catch (e) {}
 
-    const region = this.paths[0]
-      .map((row) => [row.lat.toFixed(6), row.lng.toFixed(6)].join(" "))
-      .join(", ");
-    this.$emit("update:region", region);
+    const region = this.paths[0].map((row) =>
+      [row.lat.toFixed(6), row.lng.toFixed(6)].join(" ")
+    );
+    region.push(region[0]);
+    this.$emit("update:region", region.join(", "));
   },
   data() {
     return {

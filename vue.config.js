@@ -9,10 +9,12 @@ module.exports = {
   },
   configureWebpack: {
     plugins: [
-      new CopyPlugin([
-        'static/**',
-        'CNAME'
-      ]),
+      new CopyPlugin({
+        patterns: [
+          'static/**',
+          'CNAME'
+        ],
+      }),
     ],
   },
   pluginOptions: {
