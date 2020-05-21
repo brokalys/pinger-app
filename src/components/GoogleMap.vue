@@ -64,10 +64,10 @@ export default {
       const region = mvcPaths
         .getAt(0)
         .getArray()
-        .map((row) => [row.lat().toFixed(6), row.lng().toFixed(6)].join(" "))
-        .join(", ");
+        .map((row) => [row.lat().toFixed(6), row.lng().toFixed(6)].join(" "));
+      region.push(region[0]);
 
-      this.$emit("update:region", region);
+      this.$emit("update:region", region.join(", "));
     },
 
     handleClickForDelete($event) {
