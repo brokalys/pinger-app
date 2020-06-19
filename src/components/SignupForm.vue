@@ -49,7 +49,12 @@
         <el-form-item label="Cena (no, līdz)" required>
           <el-col :span="11">
             <el-form-item prop="price_min">
-              <el-input v-model.number="form.price_min" auto-complete="off">
+              <el-input
+                v-model.number="form.price_min"
+                type="number"
+                min="0"
+                auto-complete="off"
+              >
                 <template slot="append">EUR</template>
               </el-input>
             </el-form-item>
@@ -57,7 +62,12 @@
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item prop="price_max">
-              <el-input v-model.number="form.price_max" auto-complete="off">
+              <el-input
+                v-model.number="form.price_max"
+                type="number"
+                min="0"
+                auto-complete="off"
+              >
                 <template slot="append">EUR</template>
               </el-input>
             </el-form-item>
@@ -67,14 +77,24 @@
         <el-form-item label="Istabas (no, līdz)">
           <el-col :span="11">
             <el-form-item prop="rooms_min">
-              <el-input v-model.number="form.rooms_min" auto-complete="off">
+              <el-input
+                v-model.number="form.rooms_min"
+                type="number"
+                min="0"
+                auto-complete="off"
+              >
               </el-input>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item prop="rooms_max">
-              <el-input v-model.number="form.rooms_max" auto-complete="off">
+              <el-input
+                v-model.number="form.rooms_max"
+                type="number"
+                min="0"
+                auto-complete="off"
+              >
               </el-input>
             </el-form-item>
           </el-col>
@@ -83,7 +103,12 @@
         <el-form-item label="Platība (no, līdz)">
           <el-col :span="11">
             <el-form-item prop="area_m2_min">
-              <el-input v-model.number="form.area_m2_min" auto-complete="off">
+              <el-input
+                type="number"
+                min="0"
+                v-model.number="form.area_m2_min"
+                auto-complete="off"
+              >
                 <template slot="append">m2</template>
               </el-input>
             </el-form-item>
@@ -91,7 +116,12 @@
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item prop="area_m2_max">
-              <el-input v-model.number="form.area_m2_max" auto-complete="off">
+              <el-input
+                type="number"
+                min="0"
+                v-model.number="form.area_m2_max"
+                auto-complete="off"
+              >
                 <template slot="append">m2</template>
               </el-input>
             </el-form-item>
@@ -155,6 +185,13 @@ import CREATE_PINGER from "../graphql/CreatePinger.gql";
 
 const PINGER_LIMIT_PER_EMAIL = 100;
 
+const removeEmpty = (obj) => {
+  Object.keys(obj).forEach(
+    (k) => !obj[k] && obj[k] !== undefined && delete obj[k]
+  );
+  return obj;
+};
+
 export default {
   name: "SignupForm",
   components: {
@@ -168,7 +205,7 @@ export default {
         const form = { ...this.form };
         delete form.email;
 
-        return {
+        return removeEmpty({
           ...form,
           region: this.region,
           published_at_start: moment()
@@ -181,7 +218,7 @@ export default {
             .endOf("month")
             .subtract(1, "month")
             .toISOString(),
-        };
+        });
       },
       debounce: 500,
       update(data) {
