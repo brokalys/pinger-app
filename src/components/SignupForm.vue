@@ -361,10 +361,24 @@ export default {
         ],
         area_m2_max: [
           {
-            type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai skaitļus līdz 1000.",
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback();
+              }
+
+              const max = this.form["category"] === "LAND" ? 1000000 : 1000;
+
+              if (value > max) {
+                return callback(
+                  new Error(
+                    `Šajā lauciņā var ievadīt tikai skaitļus līdz ${max}`
+                  )
+                );
+              }
+
+              return callback();
+            },
             trigger: "blur",
-            max: 1000,
           },
           { validator: greaterThan("area_m2_min"), trigger: "blur" },
         ],
