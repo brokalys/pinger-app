@@ -31,16 +31,16 @@
     "babel-plugin-component": "^1.1.1",
     "copy-webpack-plugin": "^6.0.1",
     "eslint": "^7.0.0",
-    "eslint-plugin-graphql": "^3.1.1",
+    "eslint-plugin-graphql": "^4.0.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-vue": "^6.1.1",
+    "eslint-plugin-vue": "^7.5.0",
     "graphql-tag": "^2.9.0",
     "lint-staged": "^10.0.8",
     "node-sass": "^4.12.0",
     "nyc": "^15.0.0",
     "prettier": "^2.0.4",
     "sass-loader": "^8.0.0",
-    "vue-cli-plugin-apollo": "~0.21.3",
+    "vue-cli-plugin-apollo": "~0.22.2",
     "vue-template-compiler": "^2.6.10"
   }
 }

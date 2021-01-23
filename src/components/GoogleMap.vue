@@ -10,7 +10,7 @@
     }"
     :center="center"
     :zoom="10"
-    style="width: 100%; height: 300px;"
+    style="width: 100%; height: 300px"
     ref="map"
   >
     <gmap-polygon
