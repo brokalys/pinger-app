@@ -263,6 +263,19 @@ export default {
 
       return callback();
     };
+    const integerValidator = () => (rule, value, callback) => {
+      if (!value) {
+        return callback();
+      }
+
+      if (value < 0) {
+        return callback(
+          new Error("Šajā lauciņā var ievadīt tikai pozitīvus skaitļus.")
+        );
+      }
+
+      return callback();
+    };
 
     return {
       loading: false,
@@ -336,10 +349,8 @@ export default {
         ],
         rooms_min: [
           {
-            type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai pozitīvus skaitļus.",
+            validator: integerValidator(),
             trigger: "blur",
-            min: 0,
           },
         ],
         rooms_max: [
@@ -353,10 +364,8 @@ export default {
         ],
         area_m2_min: [
           {
-            type: "integer",
-            message: "Šajā lauciņā var ievadīt tikai pozitīvus skaitļus.",
+            validator: integerValidator(),
             trigger: "blur",
-            min: 0,
           },
         ],
         area_m2_max: [
@@ -404,12 +413,20 @@ export default {
           return;
         }
 
+        const findRemovals = Object.keys(this.form).filter(
+          (key) => !this.form[key]
+        );
+
         this.loading = true;
         this.$apollo
           .mutate({
             mutation: CREATE_PINGER,
             variables: {
               ...this.form,
+              ...findRemovals.reduce(
+                (carry, key) => ({ ...carry, [key]: undefined }),
+                {}
+              ),
               region: this.region,
             },
           })
