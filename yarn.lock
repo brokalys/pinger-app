@@ -1148,6 +1148,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@brokalys/location-json-schemas@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@brokalys/location-json-schemas/-/location-json-schemas-1.2.0.tgz#5d8eee3f1b8203f3bb45998bccb91143ec3a1518"
+  integrity sha512-yxemCHIAPBKebOtDP4GBkLT0LSJlPD+6qJSSXpZrg67lwmxLca+TkQShe6PH7ydxgdIPHqW73idGTXtOACe3tw==
+
 "@bugsnag/browser@^7.6.0":
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/@bugsnag/browser/-/browser-7.6.0.tgz#3a34a1e8e151d09b3bf8cdd9d1358abc102db792"
@@ -4728,7 +4733,7 @@ eslint-plugin-react@^7.21.5:
     resolve "^1.18.1"
     string.prototype.matchall "^4.0.2"
 
-eslint-plugin-testing-library@^3.10.1, eslint-plugin-testing-library@^3.9.2:
+eslint-plugin-testing-library@^3.9.2:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-testing-library/-/eslint-plugin-testing-library-3.10.1.tgz#4dd02306d601c3238fdabf1d1dbc5f2a8e85d531"
   integrity sha512-nQIFe2muIFv2oR2zIuXE4vTbcFNx8hZKRzgHZqJg8rfopIWwoTwtlbCCNELT/jXzVe1uZF68ALGYoDXjLczKiQ==

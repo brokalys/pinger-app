@@ -9,8 +9,8 @@ import {
   SemanticShorthandItem,
 } from "semantic-ui-react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import RegionSelector from "components/RegionSelector";
 import "shared/l10n";
+import RegionField from "./Fields/RegionField";
 import schema, { FormSchema } from "./schema";
 
 const categoryOptions: DropdownItemProps[] = [
@@ -283,17 +283,7 @@ export default function PingerForm(props: PingerFormProps) {
         name="region"
         control={control}
         defaultValue="56.992294 24.136619, 56.976394 23.995790, 56.924904 24.005336, 56.889288 24.108467, 56.932211 24.291935, 56.996502 24.245176, 56.992294 24.136619"
-        render={(props) => (
-          <Form.Field
-            required
-            control={RegionSelector}
-            id="form-region-field"
-            label="Reģions"
-            error={getError(errors.region)}
-            value={props.value}
-            onChange={props.onChange}
-          />
-        )}
+        render={RegionField}
       />
 
       <Controller

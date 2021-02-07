@@ -1,14 +1,9 @@
 /// <reference types="googlemaps" />
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Message, Segment } from "semantic-ui-react";
 import convert from "./conversion";
 import styles from "./RegionSelector.module.css";
-
-const center = {
-  lat: 56.94,
-  lng: 24.105,
-};
 
 const options = {
   rotateControl: false,
@@ -20,13 +15,19 @@ const options = {
 
 interface RegionSelectorProps {
   value: string;
+  center: {
+    lat: number;
+    lng: number;
+  };
+  zoom: number;
   onChange: (event: string) => void;
 }
 
 export default function RegionSelector(props: RegionSelectorProps) {
   const [polygonRef, setPolygonRef] = useState<google.maps.Polygon>();
-  const [polygonPath] = useState(() =>
-    convert.polygonStringToCoords(props.value),
+  const polygonPath = useMemo(
+    () => convert.polygonStringToCoords(props.value),
+    [props.value],
   );
 
   const { isLoaded, loadError } = useLoadScript({
@@ -55,8 +56,8 @@ export default function RegionSelector(props: RegionSelectorProps) {
       <Message negative>
         <Message.Header>Problēma ielādējot karti</Message.Header>
         <p>
-          Diemžēl, radusies problēma ielādējot karti. Lūdzu, mēģini vēlreiz
-          vēlāk.
+          Diemžēl, radusies problēma ielādējot karti. Pašlaik var izmantot tikai
+          ātro reģionu izvēlni (augstāk).
         </p>
       </Message>
     );
@@ -66,8 +67,8 @@ export default function RegionSelector(props: RegionSelectorProps) {
     <GoogleMap
       options={options}
       mapContainerClassName={styles.map}
-      center={center}
-      zoom={11}
+      center={props.center}
+      zoom={props.zoom}
     >
       <Polygon
         draggable

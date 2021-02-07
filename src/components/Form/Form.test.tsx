@@ -2,8 +2,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Form from "./Form";
 
-jest.mock("components/RegionSelector");
-
 describe("Form", () => {
   const setFieldValue = (label: string, value: string) => {
     userEvent.clear(screen.getByLabelText(label));
@@ -27,12 +25,19 @@ describe("Form", () => {
 
   const submit = () => userEvent.click(screen.getByRole("button"));
 
+  const setupComponent = async (props) => {
+    render(<Form {...props} />);
+    await waitFor(() =>
+      expect(screen.getByText("Āgenskalns")).toBeInTheDocument(),
+    );
+  };
+
   describe("form validation", () => {
     let onSubmit;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       onSubmit = jest.fn();
-      render(<Form onSubmit={onSubmit} />);
+      await setupComponent({ onSubmit });
     });
 
     describe("individual field validation", () => {
@@ -361,29 +366,6 @@ describe("Form", () => {
         });
       });
 
-      describe("region", () => {
-        it("is required", async () => {
-          setFieldValue("Reģions", "");
-          submit();
-
-          expect(
-            await findErrorMessageForField(
-              "Reģions",
-              "Šis lauciņš ir obligāti jāaizpilda",
-            ),
-          ).toBeVisible();
-        });
-
-        it("must be a valid region", async () => {
-          setFieldValue("Reģions", "abc");
-          submit();
-
-          expect(
-            await findErrorMessageForField("Reģions", "Lūdzu izvēlies reģionu"),
-          ).toBeVisible();
-        });
-      });
-
       describe("comments", () => {
         it("must not be longer than 255 characters", async () => {
           setFieldValue("Komentāri", "c".repeat(256));
@@ -403,10 +385,7 @@ describe("Form", () => {
       setFieldValue("E-pasta adrese", "test@brokalys.com");
       setFieldValue("Cena (min)", "10000");
       setFieldValue("Cena (max)", "70000");
-      setFieldValue(
-        "Reģions",
-        "56.992294 -24.136619, 56.996502 24.245176, 56.992294 -24.136619",
-      );
+      selectDropdownValue("Reģions", "Āgenskalns");
 
       submit();
 
@@ -423,10 +402,7 @@ describe("Form", () => {
       setFieldValue("Istabas (max)", "3");
       setFieldValue("Platība (min)", "40");
       setFieldValue("Platība (max)", "80");
-      setFieldValue(
-        "Reģions",
-        "56.992294 24.136619, 56.976394 23.995790, 56.924904 24.005336, 56.889288 24.108467, 56.932211 24.291935, 56.996502 24.245176, 56.992294 24.136619",
-      );
+      selectDropdownValue("Reģions", "Āgenskalns");
       setFieldValue("Komentāri", "Test");
 
       submit();
@@ -436,7 +412,7 @@ describe("Form", () => {
   });
 
   it("shows success message", async () => {
-    render(<Form success={<p>PINGERis veiksmīgi izveidots</p>} />);
+    await setupComponent({ success: <p>PINGERis veiksmīgi izveidots</p> });
 
     expect(
       await screen.findByText("PINGERis veiksmīgi izveidots"),
@@ -444,13 +420,13 @@ describe("Form", () => {
   });
 
   it("shows warning message", async () => {
-    render(<Form warning={<p>Mēģini vēlreiz</p>} />);
+    await setupComponent({ warning: <p>Mēģini vēlreiz</p> });
 
     expect(await screen.findByText("Mēģini vēlreiz")).toBeTruthy();
   });
 
   it("shows error message", async () => {
-    render(<Form error={<p>Kaut kas nogāja greizi</p>} />);
+    await setupComponent({ error: <p>Kaut kas nogāja greizi</p> });
 
     expect(await screen.findByText("Kaut kas nogāja greizi")).toBeTruthy();
   });
