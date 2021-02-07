@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  DropdownItemProps,
-  DropdownProps,
-  Form,
-  Select,
-} from "semantic-ui-react";
+import { DropdownItemProps } from "semantic-ui-react";
 
 /**
  * Lazy-load the large region option JSON
