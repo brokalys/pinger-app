@@ -43,11 +43,6 @@ describe("RegionSelector: conversion", () => {
     });
 
     it("throws an error if invalid coordinates provided", () => {
-      const expectation = [
-        { lat: 56.992294, lng: 24.136619 },
-        { lat: 56.976394, lng: 23.99579 },
-        { lat: 56.924904, lng: 24.005336 },
-      ];
       const input = "56.992294, 56.976394 23.995790, 56.924904 24.005336";
 
       expect(() => {

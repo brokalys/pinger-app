@@ -4,7 +4,7 @@ import Bugsnag from "@bugsnag/js";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    graphQLErrors.map((data) => {
+    graphQLErrors.forEach((data) => {
       Bugsnag.notify(`[GraphQL error]: Message: ${data.message}`, (event) => {
         event.addMetadata("data", data);
       });
