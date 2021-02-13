@@ -26,6 +26,12 @@ function getCoordinatesByValue(
     ?.coordinates[0];
 }
 
+const DEFAULT_ZOOM = 11;
+const DEFAULT_CENTER = {
+  lat: 56.94,
+  lng: 24.105,
+};
+
 interface RegionFieldProps {
   value: string;
   onChange: (value: any) => void;
@@ -33,19 +39,28 @@ interface RegionFieldProps {
 
 export default function RegionField(props: RegionFieldProps) {
   const regionOptions = useRegionOptions();
-  const [center, setCenter] = useState({
-    lat: 56.94,
-    lng: 24.105,
-  });
-  const [zoom, setZoom] = useState(11);
+  const [initialValue] = useState(() => props.value);
+  const [center, setCenter] = useState(DEFAULT_CENTER);
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
   function onSelectChange(
     e: React.SyntheticEvent<HTMLElement>,
     { value, options }: DropdownProps,
   ) {
+    if (!value) {
+      reset();
+      return;
+    }
+
     setCenter(getCenterCoords(getCoordinatesByValue(options, value)));
     setZoom(13);
     props.onChange(value);
+  }
+
+  function reset() {
+    setZoom(DEFAULT_ZOOM);
+    setCenter(DEFAULT_CENTER);
+    props.onChange(initialValue);
   }
 
   return (
@@ -56,10 +71,12 @@ export default function RegionField(props: RegionFieldProps) {
           <Select
             deburr
             search
+            clearable
+            selectOnBlur={false}
+            selectOnNavigation={false}
             loading={!regionOptions.length}
             placeholder="Ātrā reģionu izvēlne"
             options={regionOptions}
-            value={props.value}
             onChange={onSelectChange}
           />
         </div>
