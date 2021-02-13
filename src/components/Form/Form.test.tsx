@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter as Router } from "react-router-dom";
 import Form from "./Form";
 
 describe("Form", () => {
@@ -10,6 +11,9 @@ describe("Form", () => {
 
   const selectDropdownValue = (label: string, valueLabel: string) =>
     userEvent.click(screen.getByText(valueLabel));
+
+  const clickCheckbox = (label: string) =>
+    userEvent.click(screen.getByRole("checkbox", { name: label }));
 
   const findErrorMessageForField = async (
     label: string,
@@ -26,7 +30,7 @@ describe("Form", () => {
   const submit = () => userEvent.click(screen.getByRole("button"));
 
   const setupComponent = async (props) => {
-    render(<Form {...props} />);
+    render(<Form {...props} />, { wrapper: Router });
     await waitFor(() =>
       expect(screen.getByText("Āgenskalns")).toBeInTheDocument(),
     );
@@ -379,6 +383,18 @@ describe("Form", () => {
           ).toBeVisible();
         });
       });
+
+      describe("privacy_policy", () => {
+        it("must be checked", async () => {
+          submit();
+
+          expect(
+            await screen.findByText(
+              "Lai izveidotu jaunu PINGERi, ir jāpiekrīt privātuma politikai",
+            ),
+          ).toBeInTheDocument();
+        });
+      });
     });
 
     it("triggers the callback on submit if the form is valid with minimal data filled", async () => {
@@ -386,6 +402,7 @@ describe("Form", () => {
       setFieldValue("Cena (min)", "10000");
       setFieldValue("Cena (max)", "70000");
       selectDropdownValue("Reģions", "Āgenskalns");
+      clickCheckbox("Piekrītu lietošanas noteikumiem un privātuma politikai");
 
       submit();
 
@@ -404,6 +421,7 @@ describe("Form", () => {
       setFieldValue("Platība (max)", "80");
       selectDropdownValue("Reģions", "Āgenskalns");
       setFieldValue("Komentāri", "Test");
+      clickCheckbox("Piekrītu lietošanas noteikumiem un privātuma politikai");
 
       submit();
 

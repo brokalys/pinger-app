@@ -1,4 +1,12 @@
-import { mixed, number, object, string, NumberSchema, SchemaOf } from "yup";
+import {
+  boolean,
+  mixed,
+  number,
+  object,
+  string,
+  NumberSchema,
+  SchemaOf,
+} from "yup";
 
 export interface FormSchema {
   email: string;
@@ -12,6 +20,7 @@ export interface FormSchema {
   area_m2_max?: number;
   region: string;
   comments?: string;
+  privacy_policy: boolean;
 }
 
 const positiveFormNumber = (): NumberSchema =>
@@ -54,6 +63,12 @@ const schema: SchemaOf<FormSchema> = object().shape({
       message: "Lūdzu izvēlies reģionu",
     }),
   comments: string().max(255),
+  privacy_policy: boolean()
+    .required()
+    .oneOf(
+      [true],
+      "Lai izveidotu jaunu PINGERi, ir jāpiekrīt privātuma politikai",
+    ),
 });
 
 export default schema;

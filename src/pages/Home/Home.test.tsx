@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter as Router } from "react-router-dom";
 import { loader } from "graphql.macro";
 import Home from "./Home";
 
@@ -20,6 +21,7 @@ const mocks = [
         price_max: 70000,
         region: mockRegion,
         comments: "",
+        privacy_policy: true,
       },
     },
     result: {
@@ -39,6 +41,7 @@ const mocks = [
         price_max: 70000,
         region: mockRegion,
         comments: "",
+        privacy_policy: true,
       },
     },
     result: {
@@ -64,6 +67,7 @@ const mocks = [
         price_max: 70000,
         region: mockRegion,
         comments: "",
+        privacy_policy: true,
       },
     },
     result: { errors: [new Error("An error occurred")] },
@@ -79,6 +83,7 @@ const mocks = [
         price_max: 70000,
         region: mockRegion,
         comments: "",
+        privacy_policy: true,
       },
     },
     error: new Error("An error occurred"),
@@ -86,7 +91,11 @@ const mocks = [
 ];
 
 function Providers({ children }) {
-  return <MockedProvider mocks={mocks}>{children}</MockedProvider>;
+  return (
+    <MockedProvider mocks={mocks}>
+      <Router>{children}</Router>
+    </MockedProvider>
+  );
 }
 
 function submitForm(customData) {
@@ -102,6 +111,11 @@ function submitForm(customData) {
   userEvent.type(screen.getByLabelText("Cena (min)"), data.price_min);
   userEvent.type(screen.getByLabelText("Cena (max)"), data.price_max);
   userEvent.click(screen.getByText(data.region));
+  userEvent.click(
+    screen.getByRole("checkbox", {
+      name: "Piekrītu lietošanas noteikumiem un privātuma politikai",
+    }),
+  );
   userEvent.click(screen.getByRole("button"));
 }
 

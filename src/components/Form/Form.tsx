@@ -1,9 +1,11 @@
 import React from "react";
 import { Controller, FieldError, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import {
   DropdownItemProps,
   DropdownProps,
   Form,
+  Icon,
   Label,
   LabelProps,
   SemanticShorthandItem,
@@ -26,9 +28,10 @@ const typeOptions: DropdownItemProps[] = [
 
 function getError(
   field?: FieldError,
+  pointing?: string,
 ): boolean | SemanticShorthandItem<LabelProps> {
   if (field) {
-    return { content: field?.message, pointing: "below" };
+    return { content: field?.message, pointing: pointing || "below" };
   }
   return false;
 }
@@ -299,6 +302,35 @@ export default function PingerForm(props: PingerFormProps) {
             error={getError(errors.comments)}
             value={props.value}
             onChange={props.onChange}
+          />
+        )}
+      />
+
+      <Controller
+        name="privacy_policy"
+        control={control}
+        defaultValue={false}
+        render={(props) => (
+          <Form.Checkbox
+            required
+            inline
+            id="form-privacy-policy-field"
+            label={
+              <label>
+                Piekrītu{" "}
+                <Link to="/terms-and-conditions" target="_blank">
+                  lietošanas noteikumiem <Icon name="external" />
+                </Link>{" "}
+                un{" "}
+                <Link to="/privacy-policy" target="_blank">
+                  privātuma politikai <Icon name="external" />
+                </Link>
+              </label>
+            }
+            error={getError(errors.privacy_policy, "left")}
+            value="agree"
+            checked={!!props.value}
+            onChange={() => props.onChange(!props.value)}
           />
         )}
       />

@@ -1,0 +1,11 @@
+.container {
+  border-radius: 5px;
+  background-color: #fff;
+  margin: 50px auto 0 auto;
+  padding: 30px 20px;
+}
+
+.footer {
+  margin-top: 20px;
+  padding-bottom: 50px;
+}
