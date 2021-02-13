@@ -400,6 +400,10 @@ describe("Form", () => {
       selectDropdownValue("Nekustamā īpašuma tips", "Māja");
       selectDropdownValue("Darījuma veids", "Īrē");
       selectDropdownValue("Cenas veids", "Par kvadratūru");
+      selectDropdownValue(
+        "Cik bieži vēlies saņemt PINGER e-pastus?",
+        "Nekavējoties",
+      );
       setFieldValue("Cena (min)", "10000");
       setFieldValue("Cena (max)", "70000");
       setFieldValue("Istabas (min)", "2");

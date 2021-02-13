@@ -9,6 +9,7 @@ h2,
 h3,
 h4,
 h5,
-label {
+label,
+span {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }

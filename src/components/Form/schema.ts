@@ -23,6 +23,7 @@ export interface FormSchema {
   area_m2_max?: number;
   region: string;
   privacy_policy: boolean;
+  frequency: "IMMEDIA" | "DAILY" | "WEEKLY" | "MONTHLY";
 }
 
 const positiveFormNumber = (): NumberSchema =>
@@ -65,6 +66,9 @@ const schema: SchemaOf<FormSchema> = object().shape({
     .matches(/^(-?[0-9]{1,3}\.[0-9]+ -?[0-9]{1,3}\.[0-9]+(, )?)+$/, {
       message: "Lūdzu izvēlies reģionu",
     }),
+  frequency: mixed()
+    .oneOf(["IMMEDIATE", "DAILY", "WEEKLY", "MONTHLY"])
+    .required(),
   privacy_policy: boolean()
     .required()
     .oneOf(

@@ -22,6 +22,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        frequency: "WEEKLY",
       },
     },
     result: {
@@ -42,6 +43,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        frequency: "WEEKLY",
       },
     },
     result: {
@@ -68,6 +70,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        frequency: "WEEKLY",
       },
     },
     result: { errors: [new Error("An error occurred")] },
@@ -84,6 +87,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        frequency: "WEEKLY",
       },
     },
     error: new Error("An error occurred"),

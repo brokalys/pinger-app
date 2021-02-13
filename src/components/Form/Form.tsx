@@ -32,6 +32,29 @@ const priceTypeOptions: DropdownItemProps[] = [
   { value: "SQM", text: "Par kvadratūru" },
 ];
 
+const frequencyOptions: DropdownItemProps[] = [
+  {
+    value: "IMMEDIATE",
+    text: "Nekavējoties",
+    description: "(viens e-pasts par katru jauno sludinājumu)",
+  },
+  {
+    value: "DAILY",
+    text: "Reizi dienā",
+    description: "(viens e-pasts ar visiem dienas sludinājumiem)",
+  },
+  {
+    value: "WEEKLY",
+    text: "Reizi nedēļā",
+    description: "(viens e-pasts ar visiem nedēļas sludinājumiem)",
+  },
+  {
+    value: "MONTHLY",
+    text: "Reizi mēnesī",
+    description: "(viens e-pasts ar visiem mēneša sludinājumiem)",
+  },
+];
+
 const DEFAULT_PRICE_TYPE = "TOTAL";
 
 function getError(
@@ -314,6 +337,27 @@ export default function PingerForm(props: PingerFormProps) {
           )}
         />
       </Form.Group>
+
+      <Controller
+        name="frequency"
+        control={control}
+        defaultValue="WEEKLY"
+        render={(props) => (
+          <Form.Field
+            required
+            id="form-frequency-field"
+            control={Form.Select}
+            label="Cik bieži vēlies saņemt PINGER e-pastus?"
+            options={frequencyOptions}
+            error={getError(errors.frequency)}
+            value={props.value}
+            onChange={(
+              e: React.SyntheticEvent<HTMLElement>,
+              { value }: DropdownProps,
+            ) => props.onChange(value)}
+          />
+        )}
+      />
 
       <Controller
         name="region"
