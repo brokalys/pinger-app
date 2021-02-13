@@ -22,7 +22,6 @@ export interface FormSchema {
   area_m2_min?: number;
   area_m2_max?: number;
   region: string;
-  comments?: string;
   privacy_policy: boolean;
 }
 
@@ -66,7 +65,6 @@ const schema: SchemaOf<FormSchema> = object().shape({
     .matches(/^(-?[0-9]{1,3}\.[0-9]+ -?[0-9]{1,3}\.[0-9]+(, )?)+$/, {
       message: "Lūdzu izvēlies reģionu",
     }),
-  comments: string().max(255),
   privacy_policy: boolean()
     .required()
     .oneOf(

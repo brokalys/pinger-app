@@ -370,20 +370,6 @@ describe("Form", () => {
         });
       });
 
-      describe("comments", () => {
-        it("must not be longer than 255 characters", async () => {
-          setFieldValue("Komentāri", "c".repeat(256));
-          submit();
-
-          expect(
-            await findErrorMessageForField(
-              "Komentāri",
-              "Šajā lauciņā drīkst ievadīt tikai 255 simbolus",
-            ),
-          ).toBeVisible();
-        });
-      });
-
       describe("privacy_policy", () => {
         it("must be checked", async () => {
           submit();
@@ -421,7 +407,6 @@ describe("Form", () => {
       setFieldValue("Platība (min)", "40");
       setFieldValue("Platība (max)", "80");
       selectDropdownValue("Reģions", "Āgenskalns");
-      setFieldValue("Komentāri", "Test");
       clickCheckbox("Piekrītu lietošanas noteikumiem un privātuma politikai");
 
       submit();

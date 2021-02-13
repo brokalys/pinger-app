@@ -323,23 +323,6 @@ export default function PingerForm(props: PingerFormProps) {
       />
 
       <Controller
-        name="comments"
-        control={control}
-        defaultValue=""
-        render={(props) => (
-          <Form.Field
-            control={Form.TextArea}
-            id="form-comments-field"
-            label="Komentāri"
-            placeholder="Ieteikumi, atsauksmes"
-            error={getError(errors.comments)}
-            value={props.value}
-            onChange={props.onChange}
-          />
-        )}
-      />
-
-      <Controller
         name="privacy_policy"
         control={control}
         defaultValue={false}

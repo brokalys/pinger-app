@@ -10,7 +10,6 @@ mutation createPinger(
   $rooms_max: Int
   $area_m2_min: Int
   $area_m2_max: Int
-  $comments: String
 ) {
   createPinger(
     email: $email
@@ -24,6 +23,5 @@ mutation createPinger(
     rooms_max: $rooms_max
     area_m2_min: $area_m2_min
     area_m2_max: $area_m2_max
-    comments: $comments
   )
 }
