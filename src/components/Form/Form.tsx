@@ -258,7 +258,7 @@ export default function PingerForm(props: PingerFormProps) {
           control={control}
           defaultValue=""
           render={(props) => (
-            <Form.Field required error={!!errors.area_m2_min}>
+            <Form.Field error={!!errors.area_m2_min}>
               <label htmlFor="form-area-m2-min-field">Platība (min)</label>
               <Form.Input
                 id="form-area-m2-min-field"
@@ -288,7 +288,7 @@ export default function PingerForm(props: PingerFormProps) {
           control={control}
           defaultValue=""
           render={(props) => (
-            <Form.Field required error={!!errors.area_m2_max}>
+            <Form.Field error={!!errors.area_m2_max}>
               <label htmlFor="form-area-m2-max-field">Platība (max)</label>
               <Form.Input
                 id="form-area-m2-max-field"
