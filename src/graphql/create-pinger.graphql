@@ -4,6 +4,7 @@ mutation createPinger(
   $type: Type!
   $price_min: Int!
   $price_max: Int!
+  $price_type: PriceType!
   $region: String!
   $rooms_min: Int
   $rooms_max: Int
@@ -17,6 +18,7 @@ mutation createPinger(
     type: $type
     price_min: $price_min
     price_max: $price_max
+    price_type: $price_type
     region: $region
     rooms_min: $rooms_min
     rooms_max: $rooms_max

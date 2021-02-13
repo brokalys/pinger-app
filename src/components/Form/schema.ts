@@ -8,12 +8,15 @@ import {
   SchemaOf,
 } from "yup";
 
+export type PRICE_TYPE = "TOTAL" | "SQM";
+
 export interface FormSchema {
   email: string;
   category: "APARTMENT" | "HOUSE" | "LAND";
   type: "SELL" | "RENT";
   price_min: number;
   price_max: number;
+  price_type: PRICE_TYPE;
   rooms_min?: number;
   rooms_max?: number;
   area_m2_min?: number;
@@ -47,6 +50,7 @@ const schema: SchemaOf<FormSchema> = object().shape({
     .required()
     .when("price_min", moreThanEqualMin)
     .lessThan(10000000),
+  price_type: mixed().oneOf(["TOTAL", "SQM"]).required(),
   rooms_min: positiveFormNumber(),
   rooms_max: positiveFormNumber()
     .when("rooms_min", moreThanEqualMin)

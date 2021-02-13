@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Controller, FieldError, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import {
@@ -13,7 +13,8 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import "shared/l10n";
 import RegionField from "./Fields/RegionField";
-import schema, { FormSchema } from "./schema";
+import PriceTypeLabel from "./PriceTypeLabel";
+import schema, { FormSchema, PRICE_TYPE } from "./schema";
 
 const categoryOptions: DropdownItemProps[] = [
   { value: "APARTMENT", text: "Dzīvoklis" },
@@ -25,6 +26,13 @@ const typeOptions: DropdownItemProps[] = [
   { value: "SELL", text: "Pārdod" },
   { value: "RENT", text: "Īrē" },
 ];
+
+const priceTypeOptions: DropdownItemProps[] = [
+  { value: "TOTAL", text: "Kopējā cena" },
+  { value: "SQM", text: "Par kvadratūru" },
+];
+
+const DEFAULT_PRICE_TYPE = "TOTAL";
 
 function getError(
   field?: FieldError,
@@ -48,6 +56,7 @@ export default function PingerForm(props: PingerFormProps) {
   const { control, handleSubmit, errors } = useForm<FormSchema>({
     resolver: yupResolver(schema),
   });
+  const [priceType, setPriceType] = useState<PRICE_TYPE>(DEFAULT_PRICE_TYPE);
 
   return (
     <Form
@@ -119,7 +128,31 @@ export default function PingerForm(props: PingerFormProps) {
         />
       </Form.Group>
 
-      <Form.Group widths="equal">
+      <Form.Group widths="3">
+        <Controller
+          name="price_type"
+          control={control}
+          defaultValue={DEFAULT_PRICE_TYPE}
+          render={(props) => (
+            <Form.Field
+              required
+              id="form-price-type-field"
+              control={Form.Select}
+              label="Cenas veids"
+              options={priceTypeOptions}
+              error={getError(errors.price_type)}
+              value={props.value}
+              onChange={(
+                e: React.SyntheticEvent<HTMLElement>,
+                { value }: DropdownProps,
+              ) => {
+                setPriceType(value as PRICE_TYPE);
+                props.onChange(value);
+              }}
+            />
+          )}
+        />
+
         <Controller
           name="price_min"
           control={control}
@@ -135,7 +168,7 @@ export default function PingerForm(props: PingerFormProps) {
               >
                 <input value={props.value} onChange={props.onChange} />
                 <Label basic prompt={!!errors.price_min}>
-                  EUR
+                  <PriceTypeLabel type={priceType} />
                 </Label>
               </Form.Input>
               {errors.price_min && (
@@ -165,7 +198,7 @@ export default function PingerForm(props: PingerFormProps) {
               >
                 <input value={props.value} onChange={props.onChange} />
                 <Label basic prompt={!!errors.price_max}>
-                  EUR
+                  <PriceTypeLabel type={priceType} />
                 </Label>
               </Form.Input>
               {errors.price_max && (

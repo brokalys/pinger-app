@@ -413,6 +413,7 @@ describe("Form", () => {
       setFieldValue("E-pasta adrese", "test@brokalys.com");
       selectDropdownValue("Nekustamā īpašuma tips", "Māja");
       selectDropdownValue("Darījuma veids", "Īrē");
+      selectDropdownValue("Cenas veids", "Par kvadratūru");
       setFieldValue("Cena (min)", "10000");
       setFieldValue("Cena (max)", "70000");
       setFieldValue("Istabas (min)", "2");
@@ -427,6 +428,17 @@ describe("Form", () => {
 
       await waitFor(() => expect(onSubmit).toBeCalled());
     });
+  });
+
+  it("changes the price labels when changing price type", async () => {
+    await setupComponent();
+    expect(await screen.findAllByText("EUR")).toHaveLength(2);
+
+    selectDropdownValue("Cenas veids", "Par kvadratūru");
+    expect(await screen.findAllByText("EUR/m")).toHaveLength(2);
+
+    selectDropdownValue("Cenas veids", "Kopējā cena");
+    expect(await screen.findAllByText("EUR")).toHaveLength(2);
   });
 
   it("shows success message", async () => {
