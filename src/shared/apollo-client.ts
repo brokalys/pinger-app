@@ -17,7 +17,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: "https://api.brokalys.com",
+  uri: process.env.REACT_APP_API_URL,
 });
 
 const client = new ApolloClient({
