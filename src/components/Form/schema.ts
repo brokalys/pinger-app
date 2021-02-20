@@ -24,6 +24,7 @@ export interface FormSchema {
   region: string;
   privacy_policy: boolean;
   frequency: "IMMEDIA" | "DAILY" | "WEEKLY" | "MONTHLY";
+  marketing?: boolean;
 }
 
 const positiveFormNumber = (): NumberSchema =>
@@ -73,8 +74,9 @@ const schema: SchemaOf<FormSchema> = object().shape({
     .required()
     .oneOf(
       [true],
-      "Lai izveidotu jaunu PINGERi, ir jāpiekrīt privātuma politikai",
+      "Lai izveidotu jaunu PINGERi, ir jāpiekrīt lietošanas noteikumiem un privātuma politikai",
     ),
+  marketing: boolean(),
 });
 
 export default schema;

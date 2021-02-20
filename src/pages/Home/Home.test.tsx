@@ -22,6 +22,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        marketing: true,
         frequency: "WEEKLY",
       },
     },
@@ -43,6 +44,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        marketing: true,
         frequency: "WEEKLY",
       },
     },
@@ -70,6 +72,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        marketing: true,
         frequency: "WEEKLY",
       },
     },
@@ -87,6 +90,7 @@ const mocks = [
         price_type: "TOTAL",
         region: mockRegion,
         privacy_policy: true,
+        marketing: true,
         frequency: "WEEKLY",
       },
     },
@@ -118,6 +122,12 @@ function submitForm(customData) {
   userEvent.click(
     screen.getByRole("checkbox", {
       name: "Piekrītu lietošanas noteikumiem un privātuma politikai",
+    }),
+  );
+  userEvent.click(
+    screen.getByRole("checkbox", {
+      name:
+        "Vēlos saņemt mārketinga komunikāciju uzzini pirmais par Brokalys uzlabojumiem!",
     }),
   );
   userEvent.click(screen.getByRole("button"));

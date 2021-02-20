@@ -395,6 +395,29 @@ export default function PingerForm(props: PingerFormProps) {
         )}
       />
 
+      <Controller
+        name="marketing"
+        control={control}
+        defaultValue={false}
+        render={(props) => (
+          <Form.Checkbox
+            inline
+            id="form-marketing-field"
+            label={
+              <label>
+                Vēlos saņemt mārketinga komunikāciju{" "}
+                <Label pointing="left">
+                  uzzini pirmais par Brokalys uzlabojumiem!
+                </Label>
+              </label>
+            }
+            value="agree"
+            checked={!!props.value}
+            onChange={() => props.onChange(!props.value)}
+          />
+        )}
+      />
+
       {props.error}
       {props.warning}
       {props.success}

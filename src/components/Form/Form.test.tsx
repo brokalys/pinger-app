@@ -376,7 +376,7 @@ describe("Form", () => {
 
           expect(
             await screen.findByText(
-              "Lai izveidotu jaunu PINGERi, ir jāpiekrīt privātuma politikai",
+              "Lai izveidotu jaunu PINGERi, ir jāpiekrīt lietošanas noteikumiem un privātuma politikai",
             ),
           ).toBeInTheDocument();
         });
@@ -412,6 +412,9 @@ describe("Form", () => {
       setFieldValue("Platība (max)", "80");
       selectDropdownValue("Reģions", "Āgenskalns");
       clickCheckbox("Piekrītu lietošanas noteikumiem un privātuma politikai");
+      clickCheckbox(
+        "Vēlos saņemt mārketinga komunikāciju uzzini pirmais par Brokalys uzlabojumiem!",
+      );
 
       submit();
 
