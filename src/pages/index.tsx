@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import ScrollToTop from "react-router-scroll-top";
 import PageContainer from "components/PageContainer";
 import Home from "./Home";
