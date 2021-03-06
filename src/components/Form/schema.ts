@@ -50,17 +50,15 @@ const schema: SchemaOf<FormSchema> = object().shape({
   price_max: positiveFormNumber()
     .required()
     .when("price_min", moreThanEqualMin)
-    .lessThan(10000000),
+    .max(10000000),
   price_type: mixed().oneOf(["TOTAL", "SQM"]).required(),
   rooms_min: positiveFormNumber(),
-  rooms_max: positiveFormNumber()
-    .when("rooms_min", moreThanEqualMin)
-    .lessThan(20),
+  rooms_max: positiveFormNumber().when("rooms_min", moreThanEqualMin).max(20),
   area_m2_min: positiveFormNumber(),
   area_m2_max: positiveFormNumber()
     .when("area_m2_min", moreThanEqualMin)
     .when("category", (category: string, schema: NumberSchema) =>
-      schema.lessThan(category === "LAND" ? 1000000 : 1000),
+      schema.max(category === "LAND" ? 1000000 : 1000),
     ),
   region: string()
     .required()

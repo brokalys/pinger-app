@@ -14,6 +14,7 @@ setLocale({
     integer: "Šajā lauciņā var ievadīt tikai veselus skaitļus",
     positive: "Šajā lauciņā var ievadīt tikai pozitīvus skaitļus",
     min: "Šī lauciņa vērtībai ir jābūt lielākai vai vienādai ar ${min}",
+    max: "Šī lauciņa vērtībai ir jābūt mazākai vai vienādai ar ${max}",
     moreThan: "Šī lauciņa vērtībai ir jābūt lielākai par ${more}",
     lessThan: "Šī lauciņa vērtībai ir jābūt mazākai par ${less}",
   },

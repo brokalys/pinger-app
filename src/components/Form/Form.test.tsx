@@ -178,7 +178,7 @@ describe("Form", () => {
             expect(
               await findErrorMessageForField(
                 "Cena (max)",
-                "Šī lauciņa vērtībai ir jābūt mazākai par 10000000",
+                "Šī lauciņa vērtībai ir jābūt mazākai vai vienādai ar 10000000",
               ),
             ).toBeVisible();
           });
@@ -257,7 +257,7 @@ describe("Form", () => {
             expect(
               await findErrorMessageForField(
                 "Istabas (max)",
-                "Šī lauciņa vērtībai ir jābūt mazākai par 20",
+                "Šī lauciņa vērtībai ir jābūt mazākai vai vienādai ar 20",
               ),
             ).toBeVisible();
           });
@@ -336,7 +336,7 @@ describe("Form", () => {
             expect(
               await findErrorMessageForField(
                 "Platība (max)",
-                "Šī lauciņa vērtībai ir jābūt mazākai par 1000",
+                "Šī lauciņa vērtībai ir jābūt mazākai vai vienādai ar 1000",
               ),
             ).toBeVisible();
           });
@@ -350,7 +350,7 @@ describe("Form", () => {
             expect(
               await findErrorMessageForField(
                 "Platība (max)",
-                "Šī lauciņa vērtībai ir jābūt mazākai par 1000000",
+                "Šī lauciņa vērtībai ir jābūt mazākai vai vienādai ar 1000000",
               ),
             ).toBeVisible();
           });
