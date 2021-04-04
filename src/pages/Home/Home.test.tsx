@@ -130,7 +130,7 @@ function submitForm(customData) {
         "Vēlos saņemt mārketinga komunikāciju uzzini pirmais par Brokalys uzlabojumiem!",
     }),
   );
-  userEvent.click(screen.getByRole("button"));
+  userEvent.click(screen.getByText("Saņemt nek.īp. paziņojumus"));
 }
 
 describe("Home", () => {

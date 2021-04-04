@@ -27,7 +27,8 @@ describe("Form", () => {
       );
     });
 
-  const submit = () => userEvent.click(screen.getByRole("button"));
+  const submit = () =>
+    userEvent.click(screen.getByText("Saņemt nek.īp. paziņojumus"));
 
   const setupComponent = async (props) => {
     render(<Form {...props} />, { wrapper: Router });

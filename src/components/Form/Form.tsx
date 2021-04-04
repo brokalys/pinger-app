@@ -5,6 +5,7 @@ import {
   DropdownItemProps,
   DropdownProps,
   Form,
+  Grid,
   Icon,
   Label,
   LabelProps,
@@ -12,6 +13,7 @@ import {
 } from "semantic-ui-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "shared/l10n";
+import SupportButton from "components/SupportButton";
 import RegionField from "./Fields/RegionField";
 import PriceTypeLabel from "./PriceTypeLabel";
 import schema, { FormSchema, PRICE_TYPE } from "./schema";
@@ -422,14 +424,23 @@ export default function PingerForm(props: PingerFormProps) {
       {props.warning}
       {props.success}
 
-      <Form.Field
-        control={Form.Button}
-        primary
-        type="submit"
-        role="button"
-        content="Saņemt nek.īp. paziņojumus"
-        formNoValidate
-      />
+      <Grid columns="equal">
+        <Grid.Row>
+          <Grid.Column>
+            <Form.Field
+              control={Form.Button}
+              primary
+              type="submit"
+              role="button"
+              content="Saņemt nek.īp. paziņojumus"
+              formNoValidate
+            />
+          </Grid.Column>
+          <Grid.Column textAlign="right">
+            <SupportButton />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </Form>
   );
 }
