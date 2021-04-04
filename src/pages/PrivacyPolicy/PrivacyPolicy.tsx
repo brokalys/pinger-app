@@ -73,7 +73,7 @@ export default function PrivacyPolicy() {
       <p>
         Šī privātuma politika var tikt mainīt bez iepriekšēja brīdinājuma.
         Jaunākā privātuma politikas versija, kas ir publicētā vietnē
-        https://pinger.brokalys.com/privacy-policy, aizstāj visas iepriekšējās
+        https://pinger.brokalys.com/#/privacy-policy, aizstāj visas iepriekšējās
         privātuma politikas versijas.
       </p>
 
