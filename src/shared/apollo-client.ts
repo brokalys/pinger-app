@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, from, HttpLink } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import Bugsnag from "@bugsnag/js";
+import packageJson from "../../package.json";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -23,6 +24,7 @@ const httpLink = new HttpLink({
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: from([errorLink, httpLink]),
+  version: packageJson.version,
 });
 
 export default client;

@@ -1,4 +1,4 @@
-mutation createPinger(
+mutation Pinger_Create(
   $email: String!
   $category: Category!
   $type: Type!

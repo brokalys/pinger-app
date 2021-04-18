@@ -1,6 +1,6 @@
 {
   "name": "@brokalys/pinger-app",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Brokalys real estate notifications",
   "author": "Matiss Janis Aboltins <matiss@brokalys.com>",
   "private": true,
