@@ -1,7 +1,9 @@
 import { ApolloProvider } from "@apollo/client";
 import React from "react";
 import ReactDOM from "react-dom";
-import "semantic-ui-css/semantic.min.css";
+// @todo: re-enable when the issue is fixed and a new version of formatic-ui is released
+// @see: https://github.com/Semantic-Org/Semantic-UI-React/issues/4227
+// import 'semantic-ui-css/semantic.min.css';
 import client from "shared/apollo-client";
 import ErrorBoundary from "shared/bugsnag";
 import "./index.css";
