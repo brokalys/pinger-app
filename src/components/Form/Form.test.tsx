@@ -5,8 +5,12 @@ import Form from "./Form";
 
 describe("Form", () => {
   const setFieldValue = (label: string, value: string) => {
-    userEvent.clear(screen.getByLabelText(label));
-    userEvent.type(screen.getByLabelText(label), value);
+    const field = screen.getByLabelText(label);
+    userEvent.clear(field);
+
+    if (value !== "") {
+      userEvent.type(field, value);
+    }
   };
 
   const selectDropdownValue = (label: string, valueLabel: string) =>
