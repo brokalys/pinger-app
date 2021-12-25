@@ -13,7 +13,7 @@ export type PRICE_TYPE = "TOTAL" | "SQM";
 export interface FormSchema {
   email: string;
   category: "APARTMENT" | "HOUSE" | "LAND";
-  type: "SELL" | "RENT";
+  type: "SELL" | "RENT" | "AUCTION";
   price_min: number;
   price_max: number;
   price_type: PRICE_TYPE;
@@ -45,7 +45,7 @@ const moreThanEqualMin = (min: number | undefined, schema: NumberSchema) => {
 const schema: SchemaOf<FormSchema> = object().shape({
   email: string().email().required(),
   category: mixed().oneOf(["APARTMENT", "HOUSE", "LAND"]).required(),
-  type: mixed().oneOf(["SELL", "RENT"]).required(),
+  type: mixed().oneOf(["SELL", "RENT", "AUCTION"]).required(),
   price_min: positiveFormNumber().required(),
   price_max: positiveFormNumber()
     .required()
