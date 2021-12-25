@@ -400,7 +400,7 @@ describe("Form", () => {
       setFieldValue("E-pasta adrese", "test@brokalys.com");
       selectDropdownValue("Nekustamā īpašuma tips", "Māja");
       selectDropdownValue("Darījuma veids", "Īrē");
-      selectDropdownValue("Cenas veids", "Par kvadratūru");
+      selectDropdownValue("Cenas veids", "Par kvadrātmetru");
       selectDropdownValue(
         "Cik bieži vēlies saņemt PINGER e-pastus?",
         "Nekavējoties",
@@ -427,7 +427,7 @@ describe("Form", () => {
     await setupComponent();
     expect(await screen.findAllByText("EUR")).toHaveLength(2);
 
-    selectDropdownValue("Cenas veids", "Par kvadratūru");
+    selectDropdownValue("Cenas veids", "Par kvadrātmetru");
     expect(await screen.findAllByText("EUR/m")).toHaveLength(2);
 
     selectDropdownValue("Cenas veids", "Kopējā cena");

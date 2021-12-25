@@ -27,11 +27,12 @@ const categoryOptions: DropdownItemProps[] = [
 const typeOptions: DropdownItemProps[] = [
   { value: "SELL", text: "Pārdod" },
   { value: "RENT", text: "Īrē" },
+  { value: "AUCTION", text: "Izsole" },
 ];
 
 const priceTypeOptions: DropdownItemProps[] = [
   { value: "TOTAL", text: "Kopējā cena" },
-  { value: "SQM", text: "Par kvadratūru" },
+  { value: "SQM", text: "Par kvadrātmetru" },
 ];
 
 const frequencyOptions: DropdownItemProps[] = [
