@@ -2,7 +2,7 @@ import { ApolloError, useMutation } from "@apollo/client";
 import { loader } from "graphql.macro";
 import { useCallback } from "react";
 import { Message } from "semantic-ui-react";
-import Form, { FormSchema } from "components/Form";
+import Form, { PingerSchema } from "components/Form";
 
 const CREATE_PINGER = loader("../../graphql/create-pinger.graphql");
 
@@ -16,7 +16,7 @@ export default function Home() {
   });
 
   const onSubmit = useCallback(
-    (form: FormSchema) => {
+    (form: PingerSchema) => {
       createPinger({ variables: form });
     },
     [createPinger],

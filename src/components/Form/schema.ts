@@ -7,24 +7,27 @@ import {
   NumberSchema,
   SchemaOf,
 } from "yup";
+import { TRANSLATION_MAP } from "./Form";
 
 export type PRICE_TYPE = "TOTAL" | "SQM";
 
-export interface FormSchema {
+export interface PingerSchema {
+  id?: string;
   email: string;
-  category: "APARTMENT" | "HOUSE" | "LAND";
-  type: "SELL" | "RENT" | "AUCTION";
+  category: keyof typeof TRANSLATION_MAP["category"];
+  type: keyof typeof TRANSLATION_MAP["type"];
   price_min: number;
   price_max: number;
-  price_type: PRICE_TYPE;
+  price_type: keyof typeof TRANSLATION_MAP["price"];
   rooms_min?: number;
   rooms_max?: number;
   area_m2_min?: number;
   area_m2_max?: number;
   region: string;
   privacy_policy: boolean;
-  frequency: "IMMEDIA" | "DAILY" | "WEEKLY" | "MONTHLY";
+  frequency: keyof typeof TRANSLATION_MAP["frequency"];
   marketing?: boolean;
+  unsubscribe_key?: string;
 }
 
 const positiveFormNumber = (): NumberSchema =>
@@ -42,7 +45,8 @@ const moreThanEqualMin = (min: number | undefined, schema: NumberSchema) => {
   return schema.min(min);
 };
 
-const schema: SchemaOf<FormSchema> = object().shape({
+const schema: SchemaOf<PingerSchema> = object().shape({
+  id: string().uuid().optional(),
   email: string().email().required(),
   category: mixed().oneOf(["APARTMENT", "HOUSE", "LAND"]).required(),
   type: mixed().oneOf(["SELL", "RENT", "AUCTION"]).required(),
@@ -75,6 +79,7 @@ const schema: SchemaOf<FormSchema> = object().shape({
       "Lai izveidotu jaunu PINGERi, ir jāpiekrīt lietošanas noteikumiem un privātuma politikai",
     ),
   marketing: boolean(),
+  unsubscribe_key: string().optional(),
 });
 
 export default schema;

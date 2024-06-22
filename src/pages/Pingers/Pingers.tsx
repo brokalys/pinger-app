@@ -25,7 +25,7 @@ import {
   ModalHeader,
   Segment,
 } from "semantic-ui-react";
-import Form from "components/Form";
+import Form, { PingerSchema } from "components/Form";
 
 const GET_PINGERS = loader("../../graphql/get-pingers.graphql");
 const UNSUBSCRIBE_PINGER = gql(`
@@ -37,38 +37,16 @@ const UNSUBSCRIBE_PINGER = gql(`
     )
   }`);
 
-type Pinger = {
-  id: string;
-  email: string;
-  category: keyof typeof TRANSLATION_MAP["category"];
-  type: keyof typeof TRANSLATION_MAP["type"];
-  price_min: number;
-  price_max: number;
-  price_type: keyof typeof TRANSLATION_MAP["price"];
-  region: string | null;
-  rooms_min: number | null;
-  rooms_max: number | null;
-  area_m2_min: number | null;
-  area_m2_max: number | null;
-  frequency: keyof typeof TRANSLATION_MAP["frequency"];
-  comments: string | null;
-  marketing: boolean | null;
-  created_at: string;
-  unsubscribed_at: string;
-  unsubscribe_key: string;
-};
-
 export default function Pingers() {
   const { id, unsubscribe_key } =
     useParams<{ id: string; unsubscribe_key: string }>();
 
   const { loading, error, data } = useQuery<{
-    pingers: { results: ReadonlyArray<Pinger> };
+    pingers: { results: ReadonlyArray<PingerSchema> };
   }>(GET_PINGERS, { variables: { id, unsubscribe_key }, errorPolicy: "all" });
 
-  const [selectedPinger, setSelectedPinger] = React.useState<Pinger | null>(
-    null,
-  );
+  const [selectedPinger, setSelectedPinger] =
+    React.useState<PingerSchema | null>(null);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY!,
@@ -121,24 +99,24 @@ export default function Pingers() {
         closeOnDimmerClick={true}
         closeOnEscape={true}
       >
-        <EditPingerForm />
+        {selectedPinger && <EditPingerForm pinger={selectedPinger} />}
       </Modal>
     </>
   );
 }
 
-const EditPingerForm: React.FC = () => {
+const EditPingerForm: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
   return (
     <>
       <ModalHeader>Labot Pingeri</ModalHeader>
       <ModalContent>
-        <Form onSubmit={() => void 0} />
+        <Form onSubmit={() => void 0} pinger={pinger} />
       </ModalContent>
     </>
   );
 };
 
-const Details: React.FC<{ pinger: Pinger }> = ({ pinger }) => {
+const Details: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
   return (
     <LabelGroup color={"blue"}>
       <Label>
@@ -161,7 +139,7 @@ const Details: React.FC<{ pinger: Pinger }> = ({ pinger }) => {
   );
 };
 
-const Controls: React.FC<{ pinger: Pinger }> = ({ pinger }) => {
+const Controls: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
   const [unsubscribePinger, { loading: unsubscribing }] =
     useMutation(UNSUBSCRIBE_PINGER);
 

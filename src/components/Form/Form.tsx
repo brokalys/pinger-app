@@ -17,7 +17,7 @@ import "shared/l10n";
 import SupportButton from "components/SupportButton";
 import RegionField from "./Fields/RegionField";
 import PriceTypeLabel from "./PriceTypeLabel";
-import schema, { FormSchema, PRICE_TYPE } from "./schema";
+import schema, { PingerSchema, PRICE_TYPE } from "./schema";
 
 export const TRANSLATION_MAP = {
   category: {
@@ -90,7 +90,8 @@ function getError(
 }
 
 interface PingerFormProps {
-  onSubmit: (data: FormSchema) => void;
+  pinger?: PingerSchema;
+  onSubmit: (data: PingerSchema) => void;
   loading?: boolean;
   error?: React.ReactNode;
   warning?: React.ReactNode;
@@ -98,8 +99,10 @@ interface PingerFormProps {
 }
 
 export default function PingerForm(props: PingerFormProps) {
-  const { control, handleSubmit, errors } = useForm<FormSchema>({
+  console.log(props.pinger);
+  const { control, handleSubmit, errors } = useForm<PingerSchema>({
     resolver: yupResolver(schema),
+    defaultValues: props.pinger,
   });
   const [priceType, setPriceType] = useState<PRICE_TYPE>(DEFAULT_PRICE_TYPE);
 
