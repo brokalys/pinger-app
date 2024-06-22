@@ -1,0 +1,27 @@
+query Pingers($id: String!, $unsubscribe_key: String!) {
+  pingers(
+    id: $id
+    unsubscribe_key: $unsubscribe_key
+  ) {
+    results {
+      id
+      email
+      category
+      type
+      price_min
+      price_max
+      price_type
+      region
+      rooms_min
+      rooms_max
+      area_m2_min
+      area_m2_max
+      frequency
+      comments
+      marketing
+      created_at
+      unsubscribed_at
+      unsubscribe_key
+    }
+  }
+}

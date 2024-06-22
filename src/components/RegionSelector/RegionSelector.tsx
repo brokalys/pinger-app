@@ -5,7 +5,7 @@ import { Message, Segment } from "semantic-ui-react";
 import convert from "./conversion";
 import styles from "./RegionSelector.module.css";
 
-const options = {
+const options: google.maps.MapOptions = {
   rotateControl: false,
   scaleControl: false,
   streetViewControl: false,
@@ -19,6 +19,7 @@ interface RegionSelectorProps {
     lat: number;
     lng: number;
   };
+  latLngBounds?: google.maps.LatLngBounds;
   zoom: number;
   onChange: (event: string) => void;
 }
@@ -68,7 +69,13 @@ export default function RegionSelector(props: RegionSelectorProps) {
       options={options}
       mapContainerClassName={styles.map}
       center={props.center}
-      zoom={props.zoom}
+      zoom={13}
+      onLoad={(map) => {
+        // TODO: this could be derived from polygonPath
+        if (props.latLngBounds) {
+          map.fitBounds(props.latLngBounds);
+        }
+      }}
     >
       <Polygon
         draggable

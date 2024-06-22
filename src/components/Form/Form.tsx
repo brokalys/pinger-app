@@ -10,6 +10,7 @@ import {
   Label,
   LabelProps,
   SemanticShorthandItem,
+  StrictDropdownItemProps,
 } from "semantic-ui-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "shared/l10n";
@@ -18,47 +19,65 @@ import RegionField from "./Fields/RegionField";
 import PriceTypeLabel from "./PriceTypeLabel";
 import schema, { FormSchema, PRICE_TYPE } from "./schema";
 
-const categoryOptions: DropdownItemProps[] = [
-  { value: "APARTMENT", text: "Dzīvoklis" },
-  { value: "HOUSE", text: "Māja" },
-  { value: "LAND", text: "Zeme" },
-];
-
-const typeOptions: DropdownItemProps[] = [
-  { value: "SELL", text: "Pārdod" },
-  { value: "RENT", text: "Īrē" },
-  { value: "AUCTION", text: "Izsole" },
-];
-
-const priceTypeOptions: DropdownItemProps[] = [
-  { value: "TOTAL", text: "Kopējā cena" },
-  { value: "SQM", text: "Par kvadrātmetru" },
-];
-
-const frequencyOptions: DropdownItemProps[] = [
-  {
-    value: "IMMEDIATE",
-    text: "Nekavējoties",
-    description: "(viens e-pasts par katru jauno sludinājumu)",
+export const TRANSLATION_MAP = {
+  category: {
+    APARTMENT: "Dzīvoklis",
+    HOUSE: "Māja",
+    LAND: "Zeme",
   },
-  {
-    value: "DAILY",
-    text: "Reizi dienā",
-    description: "(viens e-pasts ar visiem dienas sludinājumiem)",
+  type: {
+    SELL: "Pārdod",
+    RENT: "Īrē",
+    AUCTION: "Izsole",
   },
-  {
-    value: "WEEKLY",
-    text: "Reizi nedēļā",
-    description: "(viens e-pasts ar visiem nedēļas sludinājumiem)",
+  price: {
+    TOTAL: "Kopējā cena",
+    SQM: "Par kvadrātmetru",
   },
-  {
-    value: "MONTHLY",
-    text: "Reizi mēnesī",
-    description: "(viens e-pasts ar visiem mēneša sludinājumiem)",
+  frequency: {
+    IMMEDIATE: "Nekavējoties",
+    DAILY: "Reizi dienā",
+    WEEKLY: "Reizi nedēļā",
+    MONTHLY: "Reizi mēnesī",
   },
-];
+} as const;
 
-const DEFAULT_PRICE_TYPE = "TOTAL";
+const frequencyDescription: Record<
+  keyof typeof TRANSLATION_MAP["frequency"],
+  string
+> = {
+  IMMEDIATE: "(viens e-pasts par katru jauno sludinājumu)",
+  DAILY: "(viens e-pasts ar visiem dienas sludinājumiem)",
+  WEEKLY: "(viens e-pasts ar visiem nedēļas sludinājumiem)",
+  MONTHLY: "(viens e-pasts ar visiem mēneša sludinājumiem)",
+};
+
+const toDropDownItemProps = (
+  obj: Record<string, string>,
+): StrictDropdownItemProps[] => {
+  return Object.entries(obj).map(([key, value]) => ({
+    value: key,
+    text: value,
+  }));
+};
+
+const categoryOptions = toDropDownItemProps(TRANSLATION_MAP.category);
+const typeOptions = toDropDownItemProps(TRANSLATION_MAP.type);
+const priceTypeOptions = toDropDownItemProps(TRANSLATION_MAP.price);
+const frequencyOptions = toDropDownItemProps(TRANSLATION_MAP.frequency).map(
+  (v) => {
+    return {
+      ...v,
+      description:
+        frequencyDescription[
+          // TODO: I suspect with TS 5.5 casting might be fixed
+          v.value as keyof typeof TRANSLATION_MAP["frequency"]
+        ],
+    };
+  },
+);
+
+const DEFAULT_PRICE_TYPE: keyof typeof TRANSLATION_MAP["price"] = "TOTAL";
 
 function getError(
   field?: FieldError,
