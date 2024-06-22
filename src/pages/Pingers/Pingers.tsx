@@ -17,10 +17,15 @@ import {
   GridColumn,
   Icon,
   Label,
+  LabelGroup,
   List,
   ListItem,
+  Modal,
+  ModalContent,
+  ModalHeader,
   Segment,
 } from "semantic-ui-react";
+import Form from "components/Form";
 
 const GET_PINGERS = loader("../../graphql/get-pingers.graphql");
 const UNSUBSCRIBE_PINGER = gql(`
@@ -61,6 +66,10 @@ export default function Pingers() {
     pingers: { results: ReadonlyArray<Pinger> };
   }>(GET_PINGERS, { variables: { id, unsubscribe_key }, errorPolicy: "all" });
 
+  const [selectedPinger, setSelectedPinger] = React.useState<Pinger | null>(
+    null,
+  );
+
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY!,
   });
@@ -83,46 +92,72 @@ export default function Pingers() {
       <List>
         {data.pingers.results.map((pinger) => {
           return (
-            <ListItem key={pinger.id}>
+            <ListItem key={pinger.id} onClick={() => setSelectedPinger(pinger)}>
               <Segment>
-                <h2>{pinger.email}</h2>
-                <RegionSelector
-                  value={pinger.region || ""}
-                  onChange={(region) => console.log(region)}
-                />
                 <Grid>
                   <GridColumn floated={"left"} width={8}>
-                    <Details pinger={pinger} />
+                    <h2>{pinger.email}</h2>
                   </GridColumn>
                   <GridColumn floated={"right"} width={7}>
                     <Controls pinger={pinger} />
                   </GridColumn>
                 </Grid>
+                <div style={{ padding: ".5em 0" }}>
+                  <RegionSelector
+                    value={pinger.region || ""}
+                    onChange={(region) => console.log(region)}
+                  />
+                </div>
+                <Details pinger={pinger} />
               </Segment>
             </ListItem>
           );
         })}
       </List>
+      <Modal
+        open={!!selectedPinger}
+        onClose={() => setSelectedPinger(null)}
+        onUnmount={() => setSelectedPinger(null)}
+        closeOnDimmerClick={true}
+        closeOnEscape={true}
+      >
+        <EditPingerForm />
+      </Modal>
     </>
   );
 }
 
+const EditPingerForm: React.FC = () => {
+  return (
+    <>
+      <ModalHeader>Labot Pingeri</ModalHeader>
+      <ModalContent>
+        <Form onSubmit={() => void 0} />
+      </ModalContent>
+    </>
+  );
+};
+
 const Details: React.FC<{ pinger: Pinger }> = ({ pinger }) => {
   return (
-    <div>
-      <Label color={"blue"}>
+    <LabelGroup color={"blue"}>
+      <Label>
         <Icon name={"info circle"} />
         {TRANSLATION_MAP.category[pinger.category]}
       </Label>
-      <Label color={"blue"}>
+      <Label>
         <Icon name={"handshake outline"} />
         {TRANSLATION_MAP.type[pinger.type]}
       </Label>
-      <Label color={"blue"}>
+      <Label>
         <Icon name={"calendar outline"} />
         {TRANSLATION_MAP.frequency[pinger.frequency]}
       </Label>
-    </div>
+      <Label>
+        <Icon name={"euro sign"} />
+        {pinger.price_min} - {pinger.price_max}
+      </Label>
+    </LabelGroup>
   );
 };
 
