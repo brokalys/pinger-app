@@ -63,17 +63,11 @@ export default function Pingers() {
       <h1>Reģistrētie Pingeri:</h1>
       <ul>
         {data.pingers.results.map((pinger) => {
-          const coords = pinger.region
-            ? convert.polygonStringToCoords(pinger.region)
-            : [];
           return (
             <li key={pinger.id}>
               <h2>{pinger.email}</h2>
               <RegionSelector
                 value={pinger.region || ""}
-                center={toLatLngBounds(coords).getCenter().toJSON()}
-                latLngBounds={toLatLngBounds(coords)}
-                zoom={13}
                 onChange={(region) => console.log(region)}
               />
               <p>
@@ -87,12 +81,4 @@ export default function Pingers() {
       </ul>
     </>
   );
-}
-
-function toLatLngBounds(
-  points: { lng: number; lat: number }[],
-): google.maps.LatLngBounds {
-  const bounds = new google.maps.LatLngBounds();
-  points.forEach((point) => bounds.extend(point));
-  return bounds;
 }

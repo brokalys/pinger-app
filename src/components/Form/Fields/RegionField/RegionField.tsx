@@ -81,12 +81,7 @@ export default function RegionField(props: RegionFieldProps) {
           />
         </div>
 
-        <RegionSelector
-          center={center}
-          zoom={zoom}
-          value={props.value}
-          onChange={props.onChange}
-        />
+        <RegionSelector value={props.value} onChange={props.onChange} />
       </Form.Field>
     </>
   );
