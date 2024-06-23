@@ -13,8 +13,6 @@ import { useParams } from "react-router-dom";
 import {
   Button,
   ButtonGroup,
-  Grid,
-  GridColumn,
   Icon,
   Label,
   LabelGroup,
@@ -72,17 +70,11 @@ export default function Pingers() {
           return (
             <ListItem key={pinger.id}>
               <Segment>
-                <Grid>
-                  <GridColumn floated={"left"} width={8}>
-                    <h2>{pinger.email}</h2>
-                  </GridColumn>
-                  <GridColumn floated={"right"} width={7}>
-                    <Controls
-                      pinger={pinger}
-                      onEditClick={() => setSelectedPinger(pinger)}
-                    />
-                  </GridColumn>
-                </Grid>
+                <Controls
+                  pinger={pinger}
+                  onEditClick={() => setSelectedPinger(pinger)}
+                />
+
                 <div
                   style={{ padding: ".5em 0" }}
                   onClick={() => setSelectedPinger(pinger)}
@@ -90,6 +82,7 @@ export default function Pingers() {
                   <RegionSelector
                     value={pinger.region || ""}
                     onChange={(region) => console.log(region)}
+                    readonly
                   />
                 </div>
                 <Details pinger={pinger} />
@@ -149,22 +142,25 @@ const Controls: React.FC<{ pinger: PingerSchema; onEditClick: () => void }> = ({
   pinger,
   onEditClick,
 }) => {
-  const [unsubscribePinger, { loading: unsubscribing }] =
-    useMutation(UNSUBSCRIBE_PINGER);
+  const [unsubscribePinger, { loading: unsubscribing }] = useMutation(
+    gql(`
+          mutation {
+            unsubscribePinger(
+              id: "${pinger.id}",
+              unsubscribe_key: "${pinger.unsubscribe_key}",
+              all: ${Boolean(false)},
+            )
+          }
+        `),
+  );
 
   return (
-    <ButtonGroup floated={"right"}>
+    <ButtonGroup>
       <Button
         loading={unsubscribing}
         disabled={unsubscribing}
         onClick={React.useCallback(() => {
-          unsubscribePinger({
-            variables: {
-              id: pinger.id,
-              unsubscribe_key: pinger.unsubscribe_key,
-              all: false,
-            },
-          });
+          unsubscribePinger();
         }, [pinger])}
       >
         <Icon name={"calendar minus outline"} />

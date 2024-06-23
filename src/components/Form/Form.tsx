@@ -99,6 +99,7 @@ interface PingerFormProps {
 }
 
 export default function PingerForm(props: PingerFormProps) {
+  const editingExistingPinger = !!props.pinger;
   const { control, handleSubmit, errors } = useForm<PingerSchema>({
     resolver: yupResolver(schema),
     defaultValues: props.pinger,
@@ -390,57 +391,61 @@ export default function PingerForm(props: PingerFormProps) {
         render={RegionField}
       />
 
-      <Controller
-        name="privacy_policy"
-        control={control}
-        defaultValue={false}
-        render={(props) => (
-          <Form.Checkbox
-            required
-            inline
-            id="form-privacy-policy-field"
-            label={
-              <label>
-                Piekrītu{" "}
-                <Link to="/terms-and-conditions" target="_blank">
-                  lietošanas noteikumiem <Icon name="external" />
-                </Link>{" "}
-                un{" "}
-                <Link to="/privacy-policy" target="_blank">
-                  privātuma politikai <Icon name="external" />
-                </Link>
-              </label>
-            }
-            error={getError(errors.privacy_policy, "left")}
-            value="agree"
-            checked={!!props.value}
-            onChange={() => props.onChange(!props.value)}
+      {!editingExistingPinger && (
+        <>
+          <Controller
+            name="privacy_policy"
+            control={control}
+            defaultValue={false}
+            render={(props) => (
+              <Form.Checkbox
+                required
+                inline
+                id="form-privacy-policy-field"
+                label={
+                  <label>
+                    Piekrītu{" "}
+                    <Link to="/terms-and-conditions" target="_blank">
+                      lietošanas noteikumiem <Icon name="external" />
+                    </Link>{" "}
+                    un{" "}
+                    <Link to="/privacy-policy" target="_blank">
+                      privātuma politikai <Icon name="external" />
+                    </Link>
+                  </label>
+                }
+                error={getError(errors.privacy_policy, "left")}
+                value="agree"
+                checked={!!props.value}
+                onChange={() => props.onChange(!props.value)}
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        name="marketing"
-        control={control}
-        defaultValue={false}
-        render={(props) => (
-          <Form.Checkbox
-            inline
-            id="form-marketing-field"
-            label={
-              <label>
-                Vēlos saņemt mārketinga komunikāciju{" "}
-                <Label pointing="left">
-                  uzzini pirmais par Brokalys uzlabojumiem!
-                </Label>
-              </label>
-            }
-            value="agree"
-            checked={!!props.value}
-            onChange={() => props.onChange(!props.value)}
+          <Controller
+            name="marketing"
+            control={control}
+            defaultValue={false}
+            render={(props) => (
+              <Form.Checkbox
+                inline
+                id="form-marketing-field"
+                label={
+                  <label>
+                    Vēlos saņemt mārketinga komunikāciju{" "}
+                    <Label pointing="left">
+                      uzzini pirmais par Brokalys uzlabojumiem!
+                    </Label>
+                  </label>
+                }
+                value="agree"
+                checked={!!props.value}
+                onChange={() => props.onChange(!props.value)}
+              />
+            )}
           />
-        )}
-      />
+        </>
+      )}
 
       {props.error}
       {props.warning}
@@ -454,7 +459,11 @@ export default function PingerForm(props: PingerFormProps) {
               primary
               type="submit"
               role="button"
-              content="Saņemt nek.īp. paziņojumus"
+              content={
+                editingExistingPinger
+                  ? "Apstiprināt izmaiņas"
+                  : "Saņemt nek.īp. paziņojumus"
+              }
               formNoValidate
             />
           </Grid.Column>

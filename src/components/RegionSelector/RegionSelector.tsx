@@ -16,6 +16,7 @@ const options: google.maps.MapOptions = {
 interface RegionSelectorProps {
   value: string;
   onChange: (event: string) => void;
+  readonly?: boolean;
 }
 
 export default function RegionSelector(props: RegionSelectorProps) {
@@ -68,13 +69,21 @@ export default function RegionSelector(props: RegionSelectorProps) {
 
   return (
     <GoogleMap
-      options={options}
+      options={{
+        ...options,
+        disableDefaultUI: props.readonly,
+        gestureHandling: props.readonly ? "none" : undefined,
+        clickableIcons: !props.readonly,
+      }}
       mapContainerClassName={styles.map}
       onLoad={onLoad}
     >
       <Polygon
-        draggable
-        editable
+        options={{
+          draggable: !props.readonly,
+          editable: !props.readonly,
+          clickable: !props.readonly,
+        }}
         path={polygonPath}
         onLoad={setPolygonRef}
         onDragEnd={onPolygonChange}
