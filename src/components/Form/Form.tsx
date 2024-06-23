@@ -99,7 +99,6 @@ interface PingerFormProps {
 }
 
 export default function PingerForm(props: PingerFormProps) {
-  console.log(props.pinger);
   const { control, handleSubmit, errors } = useForm<PingerSchema>({
     resolver: yupResolver(schema),
     defaultValues: props.pinger,

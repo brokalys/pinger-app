@@ -70,17 +70,23 @@ export default function Pingers() {
       <List>
         {data.pingers.results.map((pinger) => {
           return (
-            <ListItem key={pinger.id} onClick={() => setSelectedPinger(pinger)}>
+            <ListItem key={pinger.id}>
               <Segment>
                 <Grid>
                   <GridColumn floated={"left"} width={8}>
                     <h2>{pinger.email}</h2>
                   </GridColumn>
                   <GridColumn floated={"right"} width={7}>
-                    <Controls pinger={pinger} />
+                    <Controls
+                      pinger={pinger}
+                      onEditClick={() => setSelectedPinger(pinger)}
+                    />
                   </GridColumn>
                 </Grid>
-                <div style={{ padding: ".5em 0" }}>
+                <div
+                  style={{ padding: ".5em 0" }}
+                  onClick={() => setSelectedPinger(pinger)}
+                >
                   <RegionSelector
                     value={pinger.region || ""}
                     onChange={(region) => console.log(region)}
@@ -139,7 +145,10 @@ const Details: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
   );
 };
 
-const Controls: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
+const Controls: React.FC<{ pinger: PingerSchema; onEditClick: () => void }> = ({
+  pinger,
+  onEditClick,
+}) => {
   const [unsubscribePinger, { loading: unsubscribing }] =
     useMutation(UNSUBSCRIBE_PINGER);
 
@@ -161,7 +170,7 @@ const Controls: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
         <Icon name={"calendar minus outline"} />
         Atrakstīties
       </Button>
-      <Button>
+      <Button onClick={onEditClick}>
         <Icon name={"edit"} />
         Labot
       </Button>
