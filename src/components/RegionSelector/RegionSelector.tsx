@@ -15,7 +15,7 @@ const options: google.maps.MapOptions = {
 
 interface RegionSelectorProps {
   value: string;
-  onChange: (event: string) => void;
+  onChange?: (event: string) => void;
   readonly?: boolean;
 }
 
@@ -31,7 +31,7 @@ export default function RegionSelector(props: RegionSelectorProps) {
   });
 
   const onPolygonChange = useCallback(() => {
-    props.onChange(convert.polygonToString(polygonRef!));
+    props.onChange?.(convert.polygonToString(polygonRef!));
   }, [polygonRef, props.onChange]);
 
   const onLoad = useCallback(

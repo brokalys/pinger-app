@@ -1,6 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { loader } from "graphql.macro";
-import React from "react";
+import React, { useCallback } from "react";
 /// <reference types="googlemaps" />
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 /**
@@ -26,6 +26,8 @@ import {
 import Form, { PingerSchema } from "components/Form";
 
 const GET_PINGERS = loader("../../graphql/get-pingers.graphql");
+const CREATE_PINGER = loader("../../graphql/create-pinger.graphql");
+
 const UNSUBSCRIBE_PINGER = gql(`
   mutation UnsubscribePinger($id: String!, $unsubscribe_key: String!, $all: Boolean!) {
     unsubscribePinger(
@@ -39,26 +41,32 @@ export default function Pingers() {
   const { id, unsubscribe_key } =
     useParams<{ id: string; unsubscribe_key: string }>();
 
-  const { loading, error, data } = useQuery<{
-    pingers: { results: ReadonlyArray<PingerSchema> };
-  }>(GET_PINGERS, { variables: { id, unsubscribe_key }, errorPolicy: "all" });
-
   const [selectedPinger, setSelectedPinger] =
     React.useState<PingerSchema | null>(null);
 
-  const { isLoaded, loadError } = useLoadScript({
+  const unselectPinger = React.useCallback(() => setSelectedPinger(null), []);
+
+  const pingers = useQuery<{
+    pingers: { results: ReadonlyArray<PingerSchema> };
+  }>(GET_PINGERS, {
+    variables: { id, unsubscribe_key },
+    errorPolicy: "all",
+  });
+
+  const googleMaps = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY!,
   });
 
-  if (loading) {
+  if (pingers.loading || !googleMaps.isLoaded) {
     return <h1>Loading...</h1>;
   }
 
-  if (error || loadError) {
-    return <h1>Error: {JSON.stringify(error || loadError)}</h1>;
+  const error = pingers.error || googleMaps.loadError;
+  if (error) {
+    return <h1>Error: {JSON.stringify(error)}</h1>;
   }
 
-  if (!data?.pingers?.results) {
+  if (!pingers.data?.pingers?.results) {
     return <h1>No pingers found</h1>;
   }
 
@@ -66,50 +74,88 @@ export default function Pingers() {
     <>
       <h1>Reģistrētie Pingeri:</h1>
       <List>
-        {data.pingers.results.map((pinger) => {
-          return (
-            <ListItem key={pinger.id}>
-              <Segment>
-                <Controls
-                  pinger={pinger}
-                  onEditClick={() => setSelectedPinger(pinger)}
-                />
-
-                <div
-                  style={{ padding: ".5em 0" }}
-                  onClick={() => setSelectedPinger(pinger)}
-                >
-                  <RegionSelector
-                    value={pinger.region || ""}
-                    onChange={(region) => console.log(region)}
-                    readonly
+        {pingers.data.pingers.results
+          .filter((_) => !_.unsubscribed_at!)
+          .map((pinger) => {
+            const setPinger = () => setSelectedPinger(pinger);
+            return (
+              <ListItem key={pinger.id}>
+                <Segment>
+                  <Controls
+                    pinger={pinger}
+                    onEditClick={setPinger}
+                    onUnsubscribe={pingers.refetch}
                   />
-                </div>
-                <Details pinger={pinger} />
-              </Segment>
-            </ListItem>
-          );
-        })}
+
+                  <div style={{ padding: ".5em 0" }} onClick={setPinger}>
+                    <RegionSelector value={pinger.region} readonly />
+                  </div>
+                  <Details pinger={pinger} />
+                </Segment>
+              </ListItem>
+            );
+          })}
       </List>
       <Modal
         open={!!selectedPinger}
-        onClose={() => setSelectedPinger(null)}
-        onUnmount={() => setSelectedPinger(null)}
+        onClose={unselectPinger}
+        onUnmount={unselectPinger}
         closeOnDimmerClick={true}
         closeOnEscape={true}
       >
-        {selectedPinger && <EditPingerForm pinger={selectedPinger} />}
+        {selectedPinger && (
+          <EditPingerForm
+            pinger={selectedPinger}
+            onEditComplete={() => {
+              unselectPinger();
+              pingers.refetch();
+            }}
+          />
+        )}
       </Modal>
     </>
   );
 }
 
-const EditPingerForm: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
+const EditPingerForm: React.FC<{
+  pinger: PingerSchema;
+  onEditComplete: () => void;
+}> = ({ pinger, onEditComplete }) => {
+  const [
+    createPinger,
+    { loading: creatingPinger, error: pingerCreationError },
+  ] = useMutation(CREATE_PINGER, { errorPolicy: "all" });
+
+  const [
+    unsubscribePinger,
+    { loading: unsubscribing, error: ubsubscribeError },
+  ] = useMutation(UNSUBSCRIBE_PINGER);
+
+  const onSubmit = useCallback(
+    (form: PingerSchema) => {
+      return unsubscribePinger({
+        variables: {
+          id: pinger.id,
+          unsubscribe_key: pinger.unsubscribe_key,
+          all: false,
+        },
+      })
+        .then(() => createPinger({ variables: form }))
+        .then(onEditComplete);
+    },
+    [createPinger, unsubscribePinger, onEditComplete],
+  );
+
   return (
     <>
       <ModalHeader>Labot Pingeri</ModalHeader>
       <ModalContent>
-        <Form onSubmit={() => void 0} pinger={pinger} />
+        <Form
+          onSubmit={onSubmit}
+          pinger={pinger}
+          error={ubsubscribeError || pingerCreationError}
+          loading={unsubscribing || creatingPinger}
+        />
       </ModalContent>
     </>
   );
@@ -138,21 +184,13 @@ const Details: React.FC<{ pinger: PingerSchema }> = ({ pinger }) => {
   );
 };
 
-const Controls: React.FC<{ pinger: PingerSchema; onEditClick: () => void }> = ({
-  pinger,
-  onEditClick,
-}) => {
-  const [unsubscribePinger, { loading: unsubscribing }] = useMutation(
-    gql(`
-          mutation {
-            unsubscribePinger(
-              id: "${pinger.id}",
-              unsubscribe_key: "${pinger.unsubscribe_key}",
-              all: ${Boolean(false)},
-            )
-          }
-        `),
-  );
+const Controls: React.FC<{
+  pinger: PingerSchema;
+  onEditClick: () => void;
+  onUnsubscribe: () => void;
+}> = ({ pinger, onEditClick, onUnsubscribe }) => {
+  const [unsubscribePinger, { loading: unsubscribing }] =
+    useMutation(UNSUBSCRIBE_PINGER);
 
   return (
     <ButtonGroup>
@@ -160,7 +198,13 @@ const Controls: React.FC<{ pinger: PingerSchema; onEditClick: () => void }> = ({
         loading={unsubscribing}
         disabled={unsubscribing}
         onClick={React.useCallback(() => {
-          unsubscribePinger();
+          unsubscribePinger({
+            variables: {
+              id: pinger.id,
+              unsubscribe_key: pinger.unsubscribe_key,
+              all: false,
+            },
+          }).then(onUnsubscribe);
         }, [pinger])}
       >
         <Icon name={"calendar minus outline"} />
