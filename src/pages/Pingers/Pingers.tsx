@@ -1,8 +1,7 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { loader } from "graphql.macro";
 import React, { useCallback } from "react";
-/// <reference types="googlemaps" />
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+
 /**
  * TODO: should we move conversion to some common place?
  * seems odd to pull from component
@@ -27,15 +26,7 @@ import Form, { PingerSchema } from "components/Form";
 
 const GET_PINGERS = loader("../../graphql/get-pingers.graphql");
 const CREATE_PINGER = loader("../../graphql/create-pinger.graphql");
-
-const UNSUBSCRIBE_PINGER = gql(`
-  mutation UnsubscribePinger($id: String!, $unsubscribe_key: String!, $all: Boolean!) {
-    unsubscribePinger(
-      id: $id,
-      unsubscribe_key: $unsubscribe_key,
-      all: $all,
-    )
-  }`);
+const UNSUBSCRIBE_PINGER = loader("../../graphql/unsubscribe-pinger.graphql");
 
 export default function Pingers() {
   const { id, unsubscribe_key } =
@@ -50,44 +41,46 @@ export default function Pingers() {
     pingers: { results: ReadonlyArray<PingerSchema> };
   }>(GET_PINGERS, {
     variables: { id, unsubscribe_key },
+    notifyOnNetworkStatusChange: true,
     errorPolicy: "all",
   });
 
-  const googleMaps = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY!,
-  });
-
-  if (pingers.loading || !googleMaps.isLoaded) {
+  if (pingers.loading) {
     return <h1>Loading...</h1>;
   }
 
-  const error = pingers.error || googleMaps.loadError;
-  if (error) {
-    return <h1>Error: {JSON.stringify(error)}</h1>;
+  if (pingers.error) {
+    return <h1>Error: {JSON.stringify(pingers.error)}</h1>;
   }
 
-  if (!pingers.data?.pingers?.results) {
-    return <h1>No pingers found</h1>;
+  const results = pingers.data?.pingers?.results;
+
+  if (!results || results.length === 0) {
+    return <h1>Nav atrasti pingeri.</h1>;
   }
 
   return (
     <>
       <h1>Reģistrētie Pingeri:</h1>
       <List>
-        {pingers.data.pingers.results
+        {results
           .filter((_) => !_.unsubscribed_at!)
           .map((pinger) => {
             const setPinger = () => setSelectedPinger(pinger);
             return (
               <ListItem key={pinger.id}>
-                <Segment>
+                <Segment data-testid={`pinger-${pinger.id}`}>
                   <Controls
                     pinger={pinger}
                     onEditClick={setPinger}
-                    onUnsubscribe={pingers.refetch}
+                    onUnsubscribe={() => pingers.refetch()}
                   />
 
-                  <div style={{ padding: ".5em 0" }} onClick={setPinger}>
+                  <div
+                    style={{ padding: ".5em 0" }}
+                    onClick={setPinger}
+                    data-testid={"region-selector-container"}
+                  >
                     <RegionSelector value={pinger.region} readonly />
                   </div>
                   <Details pinger={pinger} />
@@ -140,7 +133,9 @@ const EditPingerForm: React.FC<{
           all: false,
         },
       })
-        .then(() => createPinger({ variables: form }))
+        .then(() => {
+          return createPinger({ variables: form });
+        })
         .then(onEditComplete);
     },
     [createPinger, unsubscribePinger, onEditComplete],

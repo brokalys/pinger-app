@@ -113,6 +113,7 @@ export default function PingerForm(props: PingerFormProps) {
       warning={!!props.warning}
       success={!!props.success}
       onSubmit={handleSubmit(props.onSubmit)}
+      data-testid={"pinger-form"}
     >
       <Controller
         name="email"

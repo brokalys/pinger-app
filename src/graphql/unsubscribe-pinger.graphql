@@ -1,0 +1,7 @@
+mutation UnsubscribePinger($id: String!, $unsubscribe_key: String!, $all: Boolean!) {
+  unsubscribePinger(
+    id: $id,
+    unsubscribe_key: $unsubscribe_key,
+    all: $all,
+  )
+}
