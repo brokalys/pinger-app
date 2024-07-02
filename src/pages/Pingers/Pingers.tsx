@@ -1,13 +1,7 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { loader } from "graphql.macro";
 import React, { useCallback } from "react";
-
-/**
- * TODO: should we move conversion to some common place?
- * seems odd to pull from component
- */
 import RegionSelector from "../../components/RegionSelector";
-import { TRANSLATION_MAP } from "../../components/Form/Form";
 import { useParams } from "react-router-dom";
 import {
   Button,
@@ -23,6 +17,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 import Form, { PingerSchema } from "components/Form";
+import { TRANSLATION_MAP } from "../../shared/l10n";
 
 const GET_PINGERS = loader("../../graphql/get-pingers.graphql");
 const CREATE_PINGER = loader("../../graphql/create-pinger.graphql");
@@ -133,9 +128,7 @@ const EditPingerForm: React.FC<{
           all: false,
         },
       })
-        .then(() => {
-          return createPinger({ variables: form });
-        })
+        .then(() => createPinger({ variables: form }))
         .then(onEditComplete);
     },
     [createPinger, unsubscribePinger, onEditComplete],

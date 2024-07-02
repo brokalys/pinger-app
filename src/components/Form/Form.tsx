@@ -18,29 +18,7 @@ import SupportButton from "components/SupportButton";
 import RegionField from "./Fields/RegionField";
 import PriceTypeLabel from "./PriceTypeLabel";
 import schema, { PingerSchema, PRICE_TYPE } from "./schema";
-
-export const TRANSLATION_MAP = {
-  category: {
-    APARTMENT: "Dzīvoklis",
-    HOUSE: "Māja",
-    LAND: "Zeme",
-  },
-  type: {
-    SELL: "Pārdod",
-    RENT: "Īrē",
-    AUCTION: "Izsole",
-  },
-  price: {
-    TOTAL: "Kopējā cena",
-    SQM: "Par kvadrātmetru",
-  },
-  frequency: {
-    IMMEDIATE: "Nekavējoties",
-    DAILY: "Reizi dienā",
-    WEEKLY: "Reizi nedēļā",
-    MONTHLY: "Reizi mēnesī",
-  },
-} as const;
+import { TRANSLATION_MAP } from "../../shared/l10n";
 
 const frequencyDescription: Record<
   keyof typeof TRANSLATION_MAP["frequency"],
@@ -392,60 +370,58 @@ export default function PingerForm(props: PingerFormProps) {
         render={RegionField}
       />
 
-      <>
+      <Controller
+        name="privacy_policy"
+        control={control}
+        defaultValue={false}
+        render={(props) => (
+          <Form.Checkbox
+            required
+            inline
+            id="form-privacy-policy-field"
+            label={
+              <label>
+                Piekrītu{" "}
+                <Link to="/terms-and-conditions" target="_blank">
+                  lietošanas noteikumiem <Icon name="external" />
+                </Link>{" "}
+                un{" "}
+                <Link to="/privacy-policy" target="_blank">
+                  privātuma politikai <Icon name="external" />
+                </Link>
+              </label>
+            }
+            error={getError(errors.privacy_policy, "left")}
+            value="agree"
+            checked={!!props.value}
+            onChange={() => props.onChange(!props.value)}
+          />
+        )}
+      />
+      {!editingExistingPinger && (
         <Controller
-          name="privacy_policy"
+          name="marketing"
           control={control}
           defaultValue={false}
           render={(props) => (
             <Form.Checkbox
-              required
               inline
-              id="form-privacy-policy-field"
+              id="form-marketing-field"
               label={
                 <label>
-                  Piekrītu{" "}
-                  <Link to="/terms-and-conditions" target="_blank">
-                    lietošanas noteikumiem <Icon name="external" />
-                  </Link>{" "}
-                  un{" "}
-                  <Link to="/privacy-policy" target="_blank">
-                    privātuma politikai <Icon name="external" />
-                  </Link>
+                  Vēlos saņemt mārketinga komunikāciju{" "}
+                  <Label pointing="left">
+                    uzzini pirmais par Brokalys uzlabojumiem!
+                  </Label>
                 </label>
               }
-              error={getError(errors.privacy_policy, "left")}
               value="agree"
               checked={!!props.value}
               onChange={() => props.onChange(!props.value)}
             />
           )}
         />
-        {!editingExistingPinger && (
-          <Controller
-            name="marketing"
-            control={control}
-            defaultValue={false}
-            render={(props) => (
-              <Form.Checkbox
-                inline
-                id="form-marketing-field"
-                label={
-                  <label>
-                    Vēlos saņemt mārketinga komunikāciju{" "}
-                    <Label pointing="left">
-                      uzzini pirmais par Brokalys uzlabojumiem!
-                    </Label>
-                  </label>
-                }
-                value="agree"
-                checked={!!props.value}
-                onChange={() => props.onChange(!props.value)}
-              />
-            )}
-          />
-        )}
-      </>
+      )}
 
       {props.error}
       {props.warning}

@@ -7,25 +7,24 @@ import {
   NumberSchema,
   SchemaOf,
 } from "yup";
-import { TRANSLATION_MAP } from "./Form";
 
 export type PRICE_TYPE = "TOTAL" | "SQM";
 
 export interface PingerSchema {
   id?: string | null;
   email: string;
-  category: keyof typeof TRANSLATION_MAP["category"];
-  type: keyof typeof TRANSLATION_MAP["type"];
+  category: "APARTMENT" | "HOUSE" | "LAND";
+  type: "SELL" | "RENT" | "AUCTION";
   price_min: number;
   price_max: number;
-  price_type: keyof typeof TRANSLATION_MAP["price"];
+  price_type: PRICE_TYPE;
   rooms_min?: number | null;
   rooms_max?: number | null;
   area_m2_min?: number | null;
   area_m2_max?: number | null;
   region: string;
   privacy_policy: boolean;
-  frequency: keyof typeof TRANSLATION_MAP["frequency"];
+  frequency: "IMMEDIATE" | "DAILY" | "WEEKLY" | "MONTHLY";
   marketing?: boolean;
   unsubscribe_key?: string | null;
   unsubscribed_at?: number | null;
