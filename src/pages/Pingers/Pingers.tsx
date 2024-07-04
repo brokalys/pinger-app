@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { loader } from "graphql.macro";
 import React, { useCallback } from "react";
 import RegionSelector from "../../components/RegionSelector";
@@ -41,11 +41,12 @@ export default function Pingers() {
   });
 
   if (pingers.loading) {
-    return <h1>Loading...</h1>;
+    return <h1>Ielādējas...</h1>;
   }
 
   if (pingers.error) {
-    return <h1>Error: {JSON.stringify(pingers.error)}</h1>;
+    console.error(pingers.error);
+    return <h1>Diemžēl rausies kļūda.</h1>;
   }
 
   const results = pingers.data?.pingers?.results;
@@ -131,7 +132,13 @@ const EditPingerForm: React.FC<{
         .then(() => createPinger({ variables: form }))
         .then(onEditComplete);
     },
-    [createPinger, unsubscribePinger, onEditComplete],
+    [
+      createPinger,
+      unsubscribePinger,
+      onEditComplete,
+      pinger.id,
+      pinger.unsubscribe_key,
+    ],
   );
 
   return (
@@ -193,7 +200,7 @@ const Controls: React.FC<{
               all: false,
             },
           }).then(onUnsubscribe);
-        }, [pinger])}
+        }, [pinger, onUnsubscribe, unsubscribePinger])}
       >
         <Icon name={"calendar minus outline"} />
         Atrakstīties

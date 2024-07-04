@@ -154,7 +154,7 @@ describe("Pingers", () => {
     render(TestRoute, {
       wrapper: provider(["/pingers/id1,u1key"], mocks),
     });
-    expect(await screen.getByText("Loading...")).toBeInTheDocument();
+    expect(await screen.getByText("Ielādējas...")).toBeInTheDocument();
   });
 
   it("shows no data when loaded empty", async () => {

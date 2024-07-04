@@ -32,7 +32,7 @@ export default function RegionSelector(props: RegionSelectorProps) {
 
   const onPolygonChange = useCallback(() => {
     props.onChange?.(convert.polygonToString(polygonRef!));
-  }, [polygonRef, props.onChange]);
+  }, [polygonRef, props]);
 
   const onLoad = useCallback(
     (map) => polygonPath && map.fitBounds(toLatLngBounds(polygonPath)),
