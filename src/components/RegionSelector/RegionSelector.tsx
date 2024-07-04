@@ -1,6 +1,6 @@
 /// <reference types="googlemaps" />
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Message, Segment } from "semantic-ui-react";
 import convert from "./conversion";
 import styles from "./RegionSelector.module.css";
@@ -25,6 +25,7 @@ export default function RegionSelector(props: RegionSelectorProps) {
     () => convert.polygonStringToCoords(props.value),
     [props.value],
   );
+  const mapRef = React.useRef<google.maps.Map | null>(null);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY!,
@@ -35,9 +36,20 @@ export default function RegionSelector(props: RegionSelectorProps) {
   }, [polygonRef, props]);
 
   const onLoad = useCallback(
-    (map) => polygonPath && map.fitBounds(toLatLngBounds(polygonPath)),
+    (map) => {
+      polygonPath && map.fitBounds(toLatLngBounds(polygonPath));
+      mapRef.current = map;
+    },
     [polygonPath],
   );
+
+  useEffect(() => {
+    if (!polygonPath || !mapRef.current) {
+      return;
+    }
+
+    mapRef.current.fitBounds(toLatLngBounds(polygonPath));
+  }, [polygonPath]);
 
   const onPolygonRemove = useCallback(
     (event: google.maps.PolyMouseEvent) => {
