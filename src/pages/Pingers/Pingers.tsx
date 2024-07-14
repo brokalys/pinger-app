@@ -49,9 +49,11 @@ export default function Pingers() {
     return <h1>Diemžēl rausies kļūda.</h1>;
   }
 
-  const results = pingers.data?.pingers?.results;
+  const results: PingerSchema[] = (pingers.data?.pingers?.results || []).filter(
+    (_) => !_.unsubscribed_at!,
+  );
 
-  if (!results || results.length === 0) {
+  if (results.length === 0) {
     return <h1>Nav atrasti pingeri.</h1>;
   }
 
@@ -59,31 +61,29 @@ export default function Pingers() {
     <>
       <h1>Reģistrētie Pingeri:</h1>
       <List>
-        {results
-          .filter((_) => !_.unsubscribed_at!)
-          .map((pinger) => {
-            const setPinger = () => setSelectedPinger(pinger);
-            return (
-              <ListItem key={pinger.id}>
-                <Segment data-testid={`pinger-${pinger.id}`}>
-                  <Controls
-                    pinger={pinger}
-                    onEditClick={setPinger}
-                    onUnsubscribe={() => pingers.refetch()}
-                  />
+        {results.map((pinger) => {
+          const setPinger = () => setSelectedPinger(pinger);
+          return (
+            <ListItem key={pinger.id}>
+              <Segment data-testid={`pinger-${pinger.id}`}>
+                <Controls
+                  pinger={pinger}
+                  onEditClick={setPinger}
+                  onUnsubscribe={() => pingers.refetch()}
+                />
 
-                  <div
-                    style={{ padding: ".5em 0" }}
-                    onClick={setPinger}
-                    data-testid={"region-selector-container"}
-                  >
-                    <RegionSelector value={pinger.region} readonly />
-                  </div>
-                  <Details pinger={pinger} />
-                </Segment>
-              </ListItem>
-            );
-          })}
+                <div
+                  style={{ padding: ".5em 0" }}
+                  onClick={setPinger}
+                  data-testid={"region-selector-container"}
+                >
+                  <RegionSelector value={pinger.region} readonly />
+                </div>
+                <Details pinger={pinger} />
+              </Segment>
+            </ListItem>
+          );
+        })}
       </List>
       <Modal
         open={!!selectedPinger}

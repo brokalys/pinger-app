@@ -164,6 +164,31 @@ describe("Pingers", () => {
     expect(await screen.findByText("Nav atrasti pingeri.")).toBeInTheDocument();
   });
 
+  it("shows no data when loaded only unsubscribed entries", async () => {
+    render(TestRoute, {
+      wrapper: provider(
+        ["/pingers/id1,u1key"],
+        [
+          {
+            request: {
+              query: GET_PINGERS,
+              variables: { id: "id1", unsubscribe_key: "u1key" },
+            },
+            result: {
+              data: {
+                pingers: {
+                  __typename: "PingerWrapper",
+                  results: [{ ...response1, unsubscribed_at: "1719254104000" }],
+                },
+              },
+            },
+          },
+        ],
+      ),
+    });
+    expect(await screen.findByText("Nav atrasti pingeri.")).toBeInTheDocument();
+  });
+
   describe("with data loaded", () => {
     it("shows loading", async () => {
       render(TestRoute, { wrapper: provider(["/pingers/id1,u1key"], mocks) });
@@ -267,7 +292,13 @@ describe("Pingers", () => {
               maxUsageCount: 2,
               result: () => {
                 return unsubscribed
-                  ? { data: { pingers: { results: [] } } }
+                  ? {
+                      data: {
+                        pingers: {
+                          results: [{ ...response1, unsubscribed_at: "1" }],
+                        },
+                      },
+                    }
                   : {
                       data: {
                         pingers: {
