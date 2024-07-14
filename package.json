@@ -10,7 +10,7 @@
     "test": "react-scripts test"
   },
   "dependencies": {
-    "@apollo/client": "^3.3.8",
+    "@apollo/client": "^3.10.8",
     "@brokalys/location-json-schemas": "^1.2.0",
     "@bugsnag/js": "^7.6.0",
     "@bugsnag/plugin-react": "^7.6.0",
