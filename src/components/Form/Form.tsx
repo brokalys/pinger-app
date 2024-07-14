@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Controller, FieldError, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import {
-  DropdownItemProps,
   DropdownProps,
   Form,
   Grid,
@@ -10,55 +9,52 @@ import {
   Label,
   LabelProps,
   SemanticShorthandItem,
+  StrictDropdownItemProps,
 } from "semantic-ui-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "shared/l10n";
 import SupportButton from "components/SupportButton";
 import RegionField from "./Fields/RegionField";
 import PriceTypeLabel from "./PriceTypeLabel";
-import schema, { FormSchema, PRICE_TYPE } from "./schema";
+import schema, { PingerSchema, PRICE_TYPE } from "./schema";
+import { TRANSLATION_MAP } from "../../shared/l10n";
 
-const categoryOptions: DropdownItemProps[] = [
-  { value: "APARTMENT", text: "Dzīvoklis" },
-  { value: "HOUSE", text: "Māja" },
-  { value: "LAND", text: "Zeme" },
-];
+const frequencyDescription: Record<
+  keyof typeof TRANSLATION_MAP["frequency"],
+  string
+> = {
+  IMMEDIATE: "(viens e-pasts par katru jauno sludinājumu)",
+  DAILY: "(viens e-pasts ar visiem dienas sludinājumiem)",
+  WEEKLY: "(viens e-pasts ar visiem nedēļas sludinājumiem)",
+  MONTHLY: "(viens e-pasts ar visiem mēneša sludinājumiem)",
+};
 
-const typeOptions: DropdownItemProps[] = [
-  { value: "SELL", text: "Pārdod" },
-  { value: "RENT", text: "Īrē" },
-  { value: "AUCTION", text: "Izsole" },
-];
+const toDropDownItemProps = (
+  obj: Record<string, string>,
+): StrictDropdownItemProps[] => {
+  return Object.entries(obj).map(([key, value]) => ({
+    value: key,
+    text: value,
+  }));
+};
 
-const priceTypeOptions: DropdownItemProps[] = [
-  { value: "TOTAL", text: "Kopējā cena" },
-  { value: "SQM", text: "Par kvadrātmetru" },
-];
-
-const frequencyOptions: DropdownItemProps[] = [
-  {
-    value: "IMMEDIATE",
-    text: "Nekavējoties",
-    description: "(viens e-pasts par katru jauno sludinājumu)",
+const categoryOptions = toDropDownItemProps(TRANSLATION_MAP.category);
+const typeOptions = toDropDownItemProps(TRANSLATION_MAP.type);
+const priceTypeOptions = toDropDownItemProps(TRANSLATION_MAP.price);
+const frequencyOptions = toDropDownItemProps(TRANSLATION_MAP.frequency).map(
+  (v) => {
+    return {
+      ...v,
+      description:
+        frequencyDescription[
+          // TODO: I suspect with TS 5.5 casting might be fixed
+          v.value as keyof typeof TRANSLATION_MAP["frequency"]
+        ],
+    };
   },
-  {
-    value: "DAILY",
-    text: "Reizi dienā",
-    description: "(viens e-pasts ar visiem dienas sludinājumiem)",
-  },
-  {
-    value: "WEEKLY",
-    text: "Reizi nedēļā",
-    description: "(viens e-pasts ar visiem nedēļas sludinājumiem)",
-  },
-  {
-    value: "MONTHLY",
-    text: "Reizi mēnesī",
-    description: "(viens e-pasts ar visiem mēneša sludinājumiem)",
-  },
-];
+);
 
-const DEFAULT_PRICE_TYPE = "TOTAL";
+const DEFAULT_PRICE_TYPE: keyof typeof TRANSLATION_MAP["price"] = "TOTAL";
 
 function getError(
   field?: FieldError,
@@ -71,7 +67,8 @@ function getError(
 }
 
 interface PingerFormProps {
-  onSubmit: (data: FormSchema) => void;
+  pinger?: PingerSchema;
+  onSubmit: (data: PingerSchema) => void;
   loading?: boolean;
   error?: React.ReactNode;
   warning?: React.ReactNode;
@@ -79,8 +76,10 @@ interface PingerFormProps {
 }
 
 export default function PingerForm(props: PingerFormProps) {
-  const { control, handleSubmit, errors } = useForm<FormSchema>({
+  const editingExistingPinger = !!props.pinger;
+  const { control, handleSubmit, errors } = useForm<PingerSchema>({
     resolver: yupResolver(schema),
+    defaultValues: props.pinger,
   });
   const [priceType, setPriceType] = useState<PRICE_TYPE>(DEFAULT_PRICE_TYPE);
 
@@ -91,6 +90,7 @@ export default function PingerForm(props: PingerFormProps) {
       warning={!!props.warning}
       success={!!props.success}
       onSubmit={handleSubmit(props.onSubmit)}
+      data-testid={"pinger-form"}
     >
       <Controller
         name="email"
@@ -397,29 +397,30 @@ export default function PingerForm(props: PingerFormProps) {
           />
         )}
       />
-
-      <Controller
-        name="marketing"
-        control={control}
-        defaultValue={false}
-        render={(props) => (
-          <Form.Checkbox
-            inline
-            id="form-marketing-field"
-            label={
-              <label>
-                Vēlos saņemt mārketinga komunikāciju{" "}
-                <Label pointing="left">
-                  uzzini pirmais par Brokalys uzlabojumiem!
-                </Label>
-              </label>
-            }
-            value="agree"
-            checked={!!props.value}
-            onChange={() => props.onChange(!props.value)}
-          />
-        )}
-      />
+      {!editingExistingPinger && (
+        <Controller
+          name="marketing"
+          control={control}
+          defaultValue={false}
+          render={(props) => (
+            <Form.Checkbox
+              inline
+              id="form-marketing-field"
+              label={
+                <label>
+                  Vēlos saņemt mārketinga komunikāciju{" "}
+                  <Label pointing="left">
+                    uzzini pirmais par Brokalys uzlabojumiem!
+                  </Label>
+                </label>
+              }
+              value="agree"
+              checked={!!props.value}
+              onChange={() => props.onChange(!props.value)}
+            />
+          )}
+        />
+      )}
 
       {props.error}
       {props.warning}
@@ -433,7 +434,11 @@ export default function PingerForm(props: PingerFormProps) {
               primary
               type="submit"
               role="button"
-              content="Saņemt nek.īp. paziņojumus"
+              content={
+                editingExistingPinger
+                  ? "Apstiprināt izmaiņas"
+                  : "Saņemt nek.īp. paziņojumus"
+              }
               formNoValidate
             />
           </Grid.Column>

@@ -1,5 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 import { setLocale } from "yup";
+import { PingerSchema } from "../components/Form";
 
 setLocale({
   mixed: {
@@ -19,3 +20,34 @@ setLocale({
     lessThan: "Šī lauciņa vērtībai ir jābūt mazākai par ${less}",
   },
 });
+
+const CATEGORY_TRANSLATION_MAP: Record<PingerSchema["category"], string> = {
+  APARTMENT: "Dzīvoklis",
+  HOUSE: "Māja",
+  LAND: "Zeme",
+};
+
+const TYPE_TRANSLATION_MAP: Record<PingerSchema["type"], string> = {
+  SELL: "Pārdod",
+  RENT: "Īrē",
+  AUCTION: "Izsole",
+};
+
+const PRICE_TYPE_TRANSLATION_MAP: Record<PingerSchema["price_type"], string> = {
+  TOTAL: "Kopējā cena",
+  SQM: "Par kvadrātmetru",
+};
+
+const FREQUENCY_TRANSLATION_MAP: Record<PingerSchema["frequency"], string> = {
+  IMMEDIATE: "Nekavējoties",
+  DAILY: "Reizi dienā",
+  WEEKLY: "Reizi nedēļā",
+  MONTHLY: "Reizi mēnesī",
+};
+
+export const TRANSLATION_MAP = {
+  category: CATEGORY_TRANSLATION_MAP,
+  type: TYPE_TRANSLATION_MAP,
+  price: PRICE_TYPE_TRANSLATION_MAP,
+  frequency: FREQUENCY_TRANSLATION_MAP,
+} as const;

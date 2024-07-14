@@ -1,11 +1,11 @@
 /// <reference types="googlemaps" />
 import { GoogleMap, Polygon, useLoadScript } from "@react-google-maps/api";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Message, Segment } from "semantic-ui-react";
 import convert from "./conversion";
 import styles from "./RegionSelector.module.css";
 
-const options = {
+const options: google.maps.MapOptions = {
   rotateControl: false,
   scaleControl: false,
   streetViewControl: false,
@@ -15,12 +15,8 @@ const options = {
 
 interface RegionSelectorProps {
   value: string;
-  center: {
-    lat: number;
-    lng: number;
-  };
-  zoom: number;
-  onChange: (event: string) => void;
+  onChange?: (event: string) => void;
+  readonly?: boolean;
 }
 
 export default function RegionSelector(props: RegionSelectorProps) {
@@ -29,23 +25,43 @@ export default function RegionSelector(props: RegionSelectorProps) {
     () => convert.polygonStringToCoords(props.value),
     [props.value],
   );
+  const mapRef = React.useRef<google.maps.Map | null>(null);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY!,
   });
 
-  function onPolygonChange() {
-    props.onChange(convert.polygonToString(polygonRef!));
-  }
+  const onPolygonChange = useCallback(() => {
+    props.onChange?.(convert.polygonToString(polygonRef!));
+  }, [polygonRef, props]);
 
-  function onPolygonRemove(event: google.maps.PolyMouseEvent) {
-    if (event.vertex === undefined) {
+  const onLoad = useCallback(
+    (map) => {
+      polygonPath && map.fitBounds(toLatLngBounds(polygonPath));
+      mapRef.current = map;
+    },
+    [polygonPath],
+  );
+
+  useEffect(() => {
+    if (!polygonPath || !mapRef.current) {
       return;
     }
 
-    polygonRef!.getPath().removeAt(event.vertex);
-    onPolygonChange();
-  }
+    mapRef.current.fitBounds(toLatLngBounds(polygonPath));
+  }, [polygonPath]);
+
+  const onPolygonRemove = useCallback(
+    (event: google.maps.PolyMouseEvent) => {
+      if (event.vertex === undefined) {
+        return;
+      }
+
+      polygonRef!.getPath().removeAt(event.vertex);
+      onPolygonChange();
+    },
+    [polygonRef, onPolygonChange],
+  );
 
   if (!isLoaded) {
     return <Segment loading className={styles.map} />;
@@ -65,14 +81,21 @@ export default function RegionSelector(props: RegionSelectorProps) {
 
   return (
     <GoogleMap
-      options={options}
+      options={{
+        ...options,
+        disableDefaultUI: props.readonly,
+        gestureHandling: props.readonly ? "none" : undefined,
+        clickableIcons: !props.readonly,
+      }}
       mapContainerClassName={styles.map}
-      center={props.center}
-      zoom={props.zoom}
+      onLoad={onLoad}
     >
       <Polygon
-        draggable
-        editable
+        options={{
+          draggable: !props.readonly,
+          editable: !props.readonly,
+          clickable: !props.readonly,
+        }}
         path={polygonPath}
         onLoad={setPolygonRef}
         onDragEnd={onPolygonChange}
@@ -81,4 +104,12 @@ export default function RegionSelector(props: RegionSelectorProps) {
       />
     </GoogleMap>
   );
+}
+
+function toLatLngBounds(
+  points: { lng: number; lat: number }[],
+): google.maps.LatLngBounds {
+  const bounds = new google.maps.LatLngBounds();
+  points.forEach((point) => bounds.extend(point));
+  return bounds;
 }

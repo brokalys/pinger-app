@@ -4,6 +4,7 @@ import PageContainer from "components/PageContainer";
 import Home from "./Home";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsAndConditions from "./TermsAndConditions";
+import Pingers from "./Pingers";
 
 export default function Routes() {
   return (
@@ -16,6 +17,9 @@ export default function Routes() {
             </Route>
             <Route path="/privacy-policy">
               <PrivacyPolicy />
+            </Route>
+            <Route path="/pingers/:id,:unsubscribe_key">
+              <Pingers />
             </Route>
             <Route path="/">
               <Home />

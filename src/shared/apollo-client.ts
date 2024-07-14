@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache, from, HttpLink } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import Bugsnag from "@bugsnag/js";
 import packageJson from "../../package.json";
+import { setContext } from "@apollo/client/link/context";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -21,9 +22,16 @@ const httpLink = new HttpLink({
   uri: process.env.REACT_APP_API_URL,
 });
 
+const authLink = setContext((_, { headers }) => ({
+  headers: {
+    ...headers,
+    "X-Api-Key": process.env.REACT_APP_BROKALYS_API_KEY,
+  },
+}));
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: from([errorLink, httpLink]),
+  link: from([errorLink, authLink, httpLink]),
   version: packageJson.version,
 });
 
