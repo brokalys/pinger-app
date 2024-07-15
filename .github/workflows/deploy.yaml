@@ -16,6 +16,8 @@ jobs:
       - run: yarn test
       - name: Build 🔧
         env:
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_BROKALYS_API_KEY: ${{ secrets.REACT_APP_BROKALYS_API_KEY }}
           REACT_APP_GOOGLE_MAPS_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_KEY }}
           REACT_APP_BUGSNAG_KEY: ${{ secrets.REACT_APP_BUGSNAG_KEY }}
         run: yarn build
