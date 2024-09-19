@@ -1,7 +1,6 @@
 import { useQuery, useMutation } from "@apollo/client";
 import { loader } from "graphql.macro";
 import React, { useCallback } from "react";
-import RegionSelector from "../../components/RegionSelector";
 import { useParams } from "react-router-dom";
 import {
   Button,
@@ -18,6 +17,8 @@ import {
 } from "semantic-ui-react";
 import Form, { PingerSchema } from "components/Form";
 import { TRANSLATION_MAP } from "../../shared/l10n";
+import { staticMapUrlBuilder } from "./staticMapUrlBuilder";
+import convert from "../../components/RegionSelector/conversion";
 
 const GET_PINGERS = loader("../../graphql/get-pingers.graphql");
 const CREATE_PINGER = loader("../../graphql/create-pinger.graphql");
@@ -77,7 +78,7 @@ export default function Pingers() {
                   onClick={setPinger}
                   data-testid={"region-selector-container"}
                 >
-                  <RegionSelector value={pinger.region} readonly />
+                  <MapPreview regionRaw={pinger.region} />
                 </div>
                 <Details pinger={pinger} />
               </Segment>
@@ -210,5 +211,18 @@ const Controls: React.FC<{
         Labot
       </Button>
     </ButtonGroup>
+  );
+};
+
+const MapPreview: React.FC<{
+  regionRaw: string;
+}> = ({ regionRaw }) => {
+  const region = convert.polygonStringToCoords(regionRaw);
+  return (
+    <img
+      style={{ width: "100%", aspectRatio: "700/400" }}
+      src={staticMapUrlBuilder(region, { width: 700, height: 400 })}
+      alt={"region preview"}
+    />
   );
 };
